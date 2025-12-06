@@ -7,12 +7,24 @@ import java.util.Random;
 import java.util.Scanner;
 import javax.swing.JOptionPane;
 
+
+interface ahorcadoInterface {
+    public void verificarArchivo();
+    public void crearArchivo();
+    public void llenarArchivo();
+    public void eliminarArchivo();
+}
+
+
+
+
+
+
 public class PruebaJuegoAhorcado {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		System.out.println("Mensaje de prueba final verificacion de agregacion de cambios");
-		System.out.println("Mensaje de confirmacion");
+		
 	}
 
 }
