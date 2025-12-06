@@ -94,7 +94,16 @@ class ManejadorArchivo{
         return file.exists();
     }
 
-	
+    public boolean crearArchivo() {
+        File archivo = new File(nombreArchivo);
+        try {
+            return archivo.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 	
 }
 
