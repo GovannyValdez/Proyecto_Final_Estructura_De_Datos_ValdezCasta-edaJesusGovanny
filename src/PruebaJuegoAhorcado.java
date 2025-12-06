@@ -44,6 +44,14 @@ class Pila{
 
 class ManejadorArchivo{
 	
+	private String nombreArchivo;
+    
+    public ManejadorArchivo(String nombreArchivo) {
+        this.nombreArchivo = nombreArchivo;
+    }
+
+	
+	
 	
 }
 
