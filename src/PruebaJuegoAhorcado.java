@@ -104,7 +104,20 @@ class ManejadorArchivo{
         }
     }
 
-	
+    public boolean eliminarArchivo() {
+        File file = new File(nombreArchivo);
+        if (file.exists()) {
+            return file.delete();
+        }
+        return false;
+    }
+    
+    
+    
+    
+    
+    
+    
 }
 
 
