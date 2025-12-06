@@ -131,9 +131,40 @@ class ManejadorArchivo{
 
     
     
+    public boolean guardarPalabrasOrdenadas(String[] palabras) {
+        palabras = ordenarPalabras(palabras);
+        
+        String contenido = "";
+        for (int i = 0; i < palabras.length; i++) {
+            contenido += palabras[i];
+            if (i < palabras.length - 1) {
+                contenido += "/";
+            }
+        }
+        return escribirArchivo(contenido);
+    }
     
-    
-    
+    private String[] ordenarPalabras(String[] palabras) {
+        String[] palabrasOrdenadas = palabras.clone();
+        int n = palabrasOrdenadas.length;
+        
+        for (int gap = n / 2; gap > 0; gap /= 2) {
+            for (int i = gap; i < n; i++) {
+                String temp = palabrasOrdenadas[i];
+                int j;
+                
+                for (j = i; j >= gap && palabrasOrdenadas[j - gap].compareTo(temp) > 0; j -= gap) {
+                    palabrasOrdenadas[j] = palabrasOrdenadas[j - gap];
+                }
+                
+                palabrasOrdenadas[j] = temp;
+            }
+        }
+        
+        return palabrasOrdenadas;
+    }
+
+
 }
 
 
