@@ -74,7 +74,20 @@ class ManejadorArchivo{
     }
 
     
-	
+    public boolean escribirArchivo(String contenido) {
+        PrintWriter pw = null;
+        try {
+            pw = new PrintWriter(nombreArchivo);
+            pw.println(contenido);
+            return true;
+        } catch (FileNotFoundException e) {
+            System.out.println("Error al escribir en el archivo");
+            return false;
+        } finally {
+            if (pw != null) pw.close();
+        }
+    }
+
 	
 	
 }
