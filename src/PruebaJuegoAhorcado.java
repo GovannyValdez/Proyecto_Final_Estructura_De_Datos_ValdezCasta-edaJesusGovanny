@@ -87,6 +87,12 @@ class ManejadorArchivo{
             if (pw != null) pw.close();
         }
     }
+    
+    
+    public boolean existeArchivo() {
+        File file = new File(nombreArchivo);
+        return file.exists();
+    }
 
 	
 	
