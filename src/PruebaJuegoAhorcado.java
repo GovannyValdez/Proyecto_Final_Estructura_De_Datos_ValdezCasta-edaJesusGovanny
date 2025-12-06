@@ -49,7 +49,31 @@ class ManejadorArchivo{
     public ManejadorArchivo(String nombreArchivo) {
         this.nombreArchivo = nombreArchivo;
     }
+    
+    
+    public String leerArchivo() {
+        FileReader lectura = null;
+        BufferedReader br = null;
+        String contenido = null;
+        
+        try {
+            lectura = new FileReader(nombreArchivo);
+            br = new BufferedReader(lectura);
+            contenido = br.readLine();
+        } catch (Exception ex) {
+            System.out.println("Error al leer el archivo");
+        } finally {
+            try {
+                if (br != null) br.close();
+                if (lectura != null) lectura.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return contenido;
+    }
 
+    
 	
 	
 	
