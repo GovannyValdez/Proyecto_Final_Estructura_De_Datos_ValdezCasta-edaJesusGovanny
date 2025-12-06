@@ -42,6 +42,13 @@ class Pila{
 
 
 
+class ManejadorArchivo{
+	
+	
+}
+
+
+
 
 
 
