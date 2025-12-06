@@ -112,7 +112,23 @@ class ManejadorArchivo{
         return false;
     }
     
-    
+    public String[] cargarPalabras() {
+        String contenido = leerArchivo();
+        
+        if (contenido != null && !contenido.isEmpty()) {
+            String separacion = "";
+            for (int i = 0; i < contenido.length(); i++) {
+                if (!(contenido.substring(i, i+1).equals("/"))) {
+                    separacion = separacion + contenido.substring(i, i+1).toUpperCase();
+                } else {
+                    separacion = separacion + "/";
+                }
+            }
+            return separacion.split("/");
+        }
+        return null;
+    }
+
     
     
     
