@@ -261,6 +261,18 @@ class ManejadorArchivo{
 
 
 class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
+	
+	 private File archivo;
+	    private ManejadorArchivo manejadorArchivo;
+	    private Pila pilaLetrasIngresadas; 
+	    
+	    public JuegoAhorcado() {
+	        manejadorArchivo = new ManejadorArchivo("archivo.txt");
+	        pilaLetrasIngresadas = new Pila(30); 
+	    }
+	    
+
+	
 
 	@Override
 	public void verificarArchivo() {
