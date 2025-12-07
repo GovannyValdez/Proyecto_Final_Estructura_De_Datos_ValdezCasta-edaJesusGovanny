@@ -261,6 +261,30 @@ class ManejadorArchivo{
 
 
 class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
+
+	@Override
+	public void verificarArchivo() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void crearArchivo() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void llenarArchivo() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void eliminarArchivo() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }
 
