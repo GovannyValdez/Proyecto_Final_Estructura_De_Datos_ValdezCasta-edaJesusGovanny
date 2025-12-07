@@ -40,6 +40,7 @@ class Oportunidades {
 
 class Pila{
 	
+	
 	 	private String[] elementos;
 	    private int tope;
 	    private int capacidad;
@@ -50,6 +51,17 @@ class Pila{
 	        this.elementos = new String[capacidad];
 	        this.tope = -1;
 	    }
+	    
+	    
+	    
+	    public void push(String elemento) {
+	        if (tope < capacidad - 1) {
+	            tope++;
+	            elementos[tope] = elemento;
+	        }
+	    }
+
+	    
 	    
 	
 	
