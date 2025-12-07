@@ -102,6 +102,17 @@ class Pila{
 	    }
 
 
+	    public boolean contiene(String elemento) {
+	    	
+	        for (int i = 0; i <= tope; i++) {
+	            if (elementos[i] != null && elementos[i].equals(elemento)) {
+	                return true;
+	            }
+	        }
+	        return false;
+	    }
+	
+
 	
 }
 
