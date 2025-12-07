@@ -600,9 +600,105 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
     }
 
 	
+		
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public void mostrarMonito(byte intentosRestantes) {
+        System.out.println("-----------");
+        
+        switch (intentosRestantes) {
+            case 8:
+                System.out.println("   ");
+                System.out.println("   ");
+                System.out.println("   ");
+                System.out.println("   ");
+                System.out.println("   ");
+                System.out.println("   ");
+                break;
+            case 7:
+                System.out.println("   _______");
+                System.out.println("  |/");
+                System.out.println("  |");
+                System.out.println("  |");
+                System.out.println("  |");
+                System.out.println(" _|___");
+                break;
+            case 6:
+                System.out.println("   _______");
+                System.out.println("  |/      |");
+                System.out.println("  |");
+                System.out.println("  |");
+                System.out.println("  |");
+                System.out.println(" _|___");
+                break;
+            case 5:
+                System.out.println("   _______");
+                System.out.println("  |/      |");
+                System.out.println("  |      ( )");
+                System.out.println("  |");
+                System.out.println("  |");
+                System.out.println(" _|___");
+                break;
+            case 4:
+                System.out.println("   _______");
+                System.out.println("  |/      |");
+                System.out.println("  |      ( )");
+                System.out.println("  |       |");
+                System.out.println("  |");
+                System.out.println(" _|___");
+                break;
+            case 3:
+                System.out.println("   _______");
+                System.out.println("  |/      |");
+                System.out.println("  |      ( )");
+                System.out.println("  |      \\|");
+                System.out.println("  |");
+                System.out.println(" _|___");
+                break;
+            case 2:
+                System.out.println("   _______");
+                System.out.println("  |/      |");
+                System.out.println("  |      ( )");
+                System.out.println("  |      \\|/");
+                System.out.println("  |");
+                System.out.println(" _|___");
+                break;
+            case 1:
+                System.out.println("   _______");
+                System.out.println("  |/      |");
+                System.out.println("  |      ( )");
+                System.out.println("  |      \\|/");
+                System.out.println("  |       |");
+                System.out.println(" _|___");
+                break;
+            case 0:
+                System.out.println("   _______");
+                System.out.println("  |/      |");
+                System.out.println("  |      ( )");
+                System.out.println("  |      \\|/");
+                System.out.println("  |      / \\");
+                System.out.println(" _|___");
+                break;
+        }
+        
+        System.out.println("-----------");
+    }
+	
+	
+	
 	
 }
-
 
 public class PruebaJuegoAhorcado {
 
