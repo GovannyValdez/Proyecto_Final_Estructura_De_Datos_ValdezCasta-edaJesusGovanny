@@ -9,6 +9,7 @@ import javax.swing.JOptionPane;
 
 
 interface ahorcadoInterface {
+	
     public void verificarArchivo();
     public void crearArchivo();
     public void llenarArchivo();
@@ -16,6 +17,7 @@ interface ahorcadoInterface {
 }
 
 class Oportunidades {
+	
     private byte intentos = 0;
     
     public byte getIntentos() {
@@ -33,9 +35,23 @@ class Oportunidades {
     public void letrañ() {
         intentos = (byte)(intentos + 1);
     }
+    
 }
 
 class Pila{
+	
+	 	private String[] elementos;
+	    private int tope;
+	    private int capacidad;
+	    
+	    public Pila(int capacidad) {
+	    	
+	        this.capacidad = capacidad;
+	        this.elementos = new String[capacidad];
+	        this.tope = -1;
+	    }
+	    
+	
 	
 	
 }
@@ -49,6 +65,8 @@ class ManejadorArchivo{
     public ManejadorArchivo(String nombreArchivo) {
         this.nombreArchivo = nombreArchivo;
     }
+    
+    
     
     
     public String leerArchivo() {
@@ -74,6 +92,8 @@ class ManejadorArchivo{
     }
 
     
+    
+    
     public boolean escribirArchivo(String contenido) {
         PrintWriter pw = null;
         try {
@@ -89,11 +109,15 @@ class ManejadorArchivo{
     }
     
     
+    
+    
     public boolean existeArchivo() {
         File file = new File(nombreArchivo);
         return file.exists();
     }
 
+    
+    
     public boolean crearArchivo() {
         File archivo = new File(nombreArchivo);
         try {
@@ -104,6 +128,8 @@ class ManejadorArchivo{
         }
     }
 
+    
+    
     public boolean eliminarArchivo() {
         File file = new File(nombreArchivo);
         if (file.exists()) {
@@ -111,6 +137,9 @@ class ManejadorArchivo{
         }
         return false;
     }
+    
+    
+    
     
     public String[] cargarPalabras() {
         String contenido = leerArchivo();
@@ -131,6 +160,7 @@ class ManejadorArchivo{
 
     
     
+    
     public boolean guardarPalabrasOrdenadas(String[] palabras) {
         palabras = ordenarPalabras(palabras);
         
@@ -143,6 +173,8 @@ class ManejadorArchivo{
         }
         return escribirArchivo(contenido);
     }
+    
+    
     
     private String[] ordenarPalabras(String[] palabras) {
         String[] palabrasOrdenadas = palabras.clone();
