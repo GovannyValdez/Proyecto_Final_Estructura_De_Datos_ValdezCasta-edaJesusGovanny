@@ -544,6 +544,50 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
         return manejadorArchivo.cargarPalabras();
     }
 
+	
+	
+	
+	public String elegirPalabra(String arreglo[]) {
+        Scanner scanner = new Scanner(System.in);
+        
+        String palabrasEsp[] = arreglo[0].split(",");
+        String palabrasIng[] = arreglo[1].split(",");
+        
+        int posicionPalabraSeleccionada;
+        String palabraSecreta = "";
+        String op = "";
+        
+        System.out.println("--------------------------------------------------------------");
+        System.out.println("Bienvenido al juego del Ahorcado");
+        
+        do {
+            System.out.println("Elige en qué idioma quieres jugar");
+            System.out.println("➤ 1) Jugar con palabras en ESPAÑOL");
+            System.out.println("➤ 2) Jugar con palabras en INGLÉS");
+            System.out.println("--------------------------------------------------------------");
+            
+            op = scanner.next().toUpperCase();
+            
+            switch (op) {
+                case "1":
+                    posicionPalabraSeleccionada = new Random().nextInt(palabrasEsp.length);
+                    palabraSecreta = palabrasEsp[posicionPalabraSeleccionada];
+                    break;
+                
+                case "2":
+                    posicionPalabraSeleccionada = new Random().nextInt(palabrasIng.length);
+                    palabraSecreta = palabrasIng[posicionPalabraSeleccionada];
+                    break;
+                
+                default:
+                    System.out.println("La opción que elegiste no es correcta");
+                    System.out.println("Solo puedes ingresar '1' o '2'");
+            }
+        } while (!(op.equals("1") || op.equals("2")));
+        
+        palabraSecreta = palabraSecreta + "-" + op;
+        return palabraSecreta;
+    }
 
 	
 	
