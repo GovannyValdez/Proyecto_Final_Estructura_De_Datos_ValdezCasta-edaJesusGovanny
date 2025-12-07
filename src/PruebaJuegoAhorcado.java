@@ -86,7 +86,11 @@ class Pila{
 	        return null;
 	    }
 
-	
+	    public int tamanio() {
+	    	
+	        return tope + 1;
+	    }
+
 	
 }
 
