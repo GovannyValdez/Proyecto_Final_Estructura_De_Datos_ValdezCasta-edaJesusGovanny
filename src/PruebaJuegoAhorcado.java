@@ -78,6 +78,14 @@ class Pila{
 	    }
 
 	    
+	    public String peek() {
+	    	
+	        if (!estaVacia()) {
+	            return elementos[tope];
+	        }
+	        return null;
+	    }
+
 	
 	
 }
