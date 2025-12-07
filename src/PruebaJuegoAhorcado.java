@@ -62,7 +62,10 @@ class Pila{
 	    }
 
 	    
-	    
+	    public boolean estaVacia() {
+	        return tope == -1;
+	    }
+
 	
 	
 	
