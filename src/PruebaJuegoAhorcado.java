@@ -719,12 +719,45 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
 	
 	
 	
-	
-	
-	
-	
-	
-	
+	 public boolean seAdivinoLaPalabra(String palabraSecreta) {
+	        String[] letrasIngresadas = pilaLetrasIngresadas.obtenerElementos();
+	        int cont = 0;
+	        
+	        for (int i = 0; i < palabraSecreta.length(); i++) {
+	            String posicion = palabraSecreta.substring(i, i + 1);
+	            for (int j = 0; j < letrasIngresadas.length; j++) {
+	                if (posicion.equals(letrasIngresadas[j])) {
+	                    cont++;
+	                    break;
+	                }
+	            }
+	        }
+	        
+	        return cont == palabraSecreta.length();
+	    }
+
+	 
+	 public String obtenerPalabraAdivinada(String palabraSecreta) {
+	        String[] letrasIngresadas = pilaLetrasIngresadas.obtenerElementos();
+	        String carac = "!#$%&/()=? '<>-_.:,;}";
+	        String palabraCodificada = "";
+	        
+	        for (int i = 0; i < palabraSecreta.length(); i++) {
+	            palabraCodificada = palabraCodificada + carac.substring(i, i + 1);
+	        }
+	        
+	        for (int i = 0; i < letrasIngresadas.length; i++) {
+	            for (int j = 0; j < palabraSecreta.length(); j++) {
+	                if (palabraSecreta.substring(j, j + 1).equals(letrasIngresadas[i])) {
+	                    char c = palabraCodificada.charAt(j);
+	                    palabraCodificada = palabraCodificada.replace(c, letrasIngresadas[i].charAt(0));
+	                }
+	            }
+	        }
+	        
+	        return palabraCodificada;
+	    }
+
 	
 	
 	
