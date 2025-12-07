@@ -116,8 +116,6 @@ class Pila{
 	
 }
 
-
-
 class ManejadorArchivo{
 	
 	private String nombreArchivo;
@@ -262,7 +260,9 @@ class ManejadorArchivo{
 
 
 
-
+class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
+	
+}
 
 
 public class PruebaJuegoAhorcado {
