@@ -464,6 +464,8 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
 	
 	public void menuOpciones() {
         Scanner scanner = new Scanner(System.in);
+        
+        
         String AZUL = "\u001B[36m";
         String RESET = "\u001B[0m";
         char eleccion = ' ';
@@ -536,7 +538,15 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
             }
         } while (eleccion != '5');
     }
+	
+	
+	public String[] cargarPalabras() {
+        return manejadorArchivo.cargarPalabras();
+    }
 
+
+	
+	
 	
 }
 
