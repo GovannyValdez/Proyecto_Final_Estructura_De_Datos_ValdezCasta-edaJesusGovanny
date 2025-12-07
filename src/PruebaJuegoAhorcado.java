@@ -462,6 +462,82 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
 
 	
 	
+	public void menuOpciones() {
+        Scanner scanner = new Scanner(System.in);
+        String AZUL = "\u001B[36m";
+        String RESET = "\u001B[0m";
+        char eleccion = ' ';
+        
+        do {
+            System.out.println("╔════════════════════════════════════════════════════════╗");
+            System.out.println("║ " + AZUL + "                   MENU PRINCIPAL                   " + RESET + "   ║");
+            System.out.println("╠════════════════════════════════════════════════════════╣");
+            System.out.println("║ Elige una opción:                                      ║");
+            System.out.println("║                                                        ║");
+            System.out.println("║   1) Verificar archivo                                 ║");
+            System.out.println("║   2) Llenar archivo con palabras                       ║");
+            System.out.println("║   3) Borrar archivo                                    ║");
+            System.out.println("║   4) Jugar                                             ║");
+            System.out.println("║   5) Salir                                             ║");
+            System.out.println("╚════════════════════════════════════════════════════════╝");
+            System.out.print("Tu opción: ");
+            
+            String opc = scanner.next();
+            
+            if (opc.length() == 1) {
+                eleccion = opc.charAt(0);
+                
+                switch (eleccion) {
+                    case '1':
+                        verificarArchivo();
+                        break;
+                    
+                    case '2':
+                        llenarArchivo();
+                        break;
+                    
+                    case '3':
+                        eliminarArchivo();
+                        break;
+                    
+                    case '4':
+                        String palabrasCargadas[] = null;
+                        
+                        if (validarPalabrasParaJugar() == false) {
+                            break;
+                        } else {
+                            palabrasCargadas = cargarPalabras();
+                        }
+                        
+                        String palabraSecreta = "";
+                        
+                        try {
+                            palabraSecreta = elegirPalabra(palabrasCargadas);
+                        } catch (ArrayIndexOutOfBoundsException e) {
+                            System.out.println("-----------------------------------------------------------------------------------------------");
+                            System.out.println("Ha ocurrido un error parece que no llenaste correctamente el archivo de texto");
+                            System.out.println("Inténtalo de nuevo correctamente!!");
+                            System.out.println("---------------------------------------------------------------------------------------------");
+                            llenarArchivo();
+                            break;
+                        }
+                        inicioAhorcado(palabraSecreta);
+                        break;
+                    
+                    case '5':
+                        System.out.println("Fin del Juego DEJAVU!!!");
+                        System.out.println(AZUL + "Saliendo..." + RESET);
+                        break;
+                    
+                    default:
+                        System.out.println("ERROR!!! Ingresa una opción válida del 1 al 5 :)");
+                }
+                System.out.println("----------------------------------------------------------------------------------");
+            }
+        } while (eleccion != '5');
+    }
+
+	
 }
 
 
