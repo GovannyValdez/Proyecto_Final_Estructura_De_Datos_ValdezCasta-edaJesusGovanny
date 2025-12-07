@@ -600,7 +600,123 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
     }
 
 	
-		
+	 public void inicioAhorcado(String palabraSecretaMasIdioma) {
+	        Scanner scanner = new Scanner(System.in);
+	        
+	        String ROJO = "\u001B[91m";
+	        String RESET = "\u001B[0m";
+	        String AMARILLO = "\u001B[33m";
+	        String VERDE = "\u001B[32m";
+	        
+	        boolean ganador = false;
+	        setIntentos((byte) 8);
+	        
+	        pilaLetrasIngresadas = new Pila(30);
+	        
+	        String palabraIdioma[] = palabraSecretaMasIdioma.split("-");
+	        String palabraSecreta = palabraIdioma[0];
+	        String idioma = palabraIdioma[1];
+	        
+	        if (palabraSecreta.length() == 0) {
+	            System.out.println("Error no hiciste correctamente el ingreso de palabras :(");
+	            return;
+	        }
+	        
+	        if (idioma.equalsIgnoreCase("2")) {
+	            System.out.println("Estoy pensando en una palabra en INGLÉS con " + palabraSecreta.length() + " letras");
+	        } else {
+	            System.out.println("Estoy pensando en una palabra en ESPAÑOL con " + palabraSecreta.length() + " letras");
+	        }
+	        
+	        System.out.println("--------------------------------------------------------------");
+	        
+	        do {
+	            if (getIntentos() == 0) {
+	                break;
+	            }
+	            
+	            System.out.println("Tienes " + getIntentos() + " oportunidades para adivinar");
+	            mostrarMonito(getIntentos());
+	            System.out.println();
+	            System.out.println("Letras disponibles: " + obtenerLetrasDisponibles(idioma));
+	            System.out.print("Ingresa una letra: ");
+	            
+	            String letra = scanner.next().toUpperCase();
+	            
+	            if (letra.length() > 1) {
+	                System.out.println("Ingresaste más de un carácter");
+	                continue;
+	            }
+	            
+	            if (letra.length() == 1) {
+	                char charLetra = letra.charAt(0);
+	                
+	                if (charLetra >= 48 && charLetra <= 57) {
+	                    System.out.println("Esto no es una letra, es un número");
+	                    continue;
+	                }
+	                
+	                if (!Character.isLetter(charLetra)) {
+	                    System.out.println("Ingresaste un carácter especial");
+	                    continue;
+	                }
+	                
+	                if (idioma.equals("2") && letra.equals("Ñ")) {
+	                    System.out.println("La letra 'ñ' no existe en el abecedario del idioma inglés");
+	                    descontarIntentos();
+	                    letrañ();
+	                    continue;
+	                }
+	                
+	                if (pilaLetrasIngresadas.contiene(letra)) {
+	                    System.out.println("Ya habías ingresado esa letra");
+	                    continue;
+	                }
+	                
+	                pilaLetrasIngresadas.push(letra);
+	                
+	                boolean letraEncontrada = false;
+	                for (int i = 0; i < palabraSecreta.length(); i++) {
+	                    if (palabraSecreta.substring(i, i + 1).equals(letra)) {
+	                        letraEncontrada = true;
+	                        break;
+	                    }
+	                }
+	                
+	                if (letraEncontrada) {
+	                    System.out.println(VERDE + "✅ Acertaste!!" + RESET);
+	                } else {
+	                    System.out.println(ROJO + "❌ La letra NO está en la palabra SECRETA" + RESET);
+	                    descontarIntentos();
+	                }
+	                
+	                String palabraActual = obtenerPalabraAdivinada(palabraSecreta);
+	                for (int i = 0; i < palabraActual.length(); i++) {
+	                    if (palabraActual.codePointAt(i) <= 90 && palabraActual.codePointAt(i) >= 65) {
+	                        System.out.print(palabraActual.charAt(i) + " ");
+	                    } else {
+	                        System.out.print("_ ");
+	                    }
+	                }
+	                System.out.println();
+	            }
+	            
+	            if (seAdivinoLaPalabra(palabraSecreta)) {
+	                ganador = true;
+	                break;
+	            }
+	            
+	        } while (getIntentos() > 0);
+	        
+	        if (getIntentos() == 0) {
+	            mostrarMonito((byte) 0);
+	            System.out.println("Te has quedado sin oportunidades disponibles :(");
+	            System.out.println("La palabra secreta era: " + AMARILLO + palabraSecreta + RESET);
+	        } else if (ganador == true) {
+	            System.out.println(VERDE + "¡Felicidades! GANASTE :D!!!" + RESET);
+	        }
+	    }
+	
 	
 	
 	
