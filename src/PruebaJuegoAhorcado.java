@@ -312,19 +312,98 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
 
 	@Override
 	public void crearArchivo() {
-		// TODO Auto-generated method stub
+		
+		String RESET = "\u001B[0m";
+        String VERDE = "\u001B[32m";
+        
+        if (manejadorArchivo.crearArchivo()) {
+            System.out.println(VERDE + "Archivo creado con éxito" + RESET);
+        } else {
+            System.out.println("Error al crear el archivo de texto");
+        }
+
 		
 	}
 
 	@Override
 	public void llenarArchivo() {
-		// TODO Auto-generated method stub
+		
+		 Scanner scanner = new Scanner(System.in);
+		 
+	        String VERDE = "\u001B[32m";
+	        String RESET = "\u001B[0m";
+	        String AMARILLO = "\u001B[33m";
+	        String ROJO = "\u001B[91m";
+	        
+	        System.out.println("╔══════════════════════════════════════════════════════════════════════════════╗");
+	        System.out.println("║ " + VERDE + "                    ««««««« Instrucciones »»»»»»»   " + RESET + "                         ║");
+	        System.out.println("╠══════════════════════════════════════════════════════════════════════════════╣");
+	        System.out.println("║ -Llenar a continuación el archivo con palabras en español e inglés           ║");
+	        System.out.println("║ -Las palabras en español e inglés se separan con una barra diagonal (/)      ║");
+	        System.out.println("║ -Separar cada palabra con una coma (,)                                       ║");
+	        System.out.println("║                                                                              ║");
+	        System.out.println("║ " + AMARILLO + "Ejemplo: hola,donde/hello,where" + RESET + "                                              ║");
+	        System.out.println("╚══════════════════════════════════════════════════════════════════════════════╝");
+	        
+	        boolean datosCorrectos = false;
+	        String palabrasIngresadas = "";
+	        
+	        while (!datosCorrectos) {
+	            System.out.print("Ingrese las palabras: ");
+	            palabrasIngresadas = scanner.nextLine().toUpperCase().replace(" ", "");
+	            
+	            boolean tieneNumeros = palabrasIngresadas.matches(".*\\d.*");
+	            boolean tieneCaracteresInvalidos = !palabrasIngresadas.matches("[A-ZÑ,\\/]+");
+	            
+	            boolean formatoCorrecto = false;
+	            if (palabrasIngresadas.contains("/")) {
+	                String[] partes = palabrasIngresadas.split("/");
+	                if (partes.length == 2) {
+	                    String[] palabrasEspanol = partes[0].split(",");
+	                    String[] palabrasIngles = partes[1].split(",");
+	                    if (palabrasEspanol.length == palabrasIngles.length && palabrasEspanol.length > 0) {
+	                        formatoCorrecto = true;
+	                    }
+	                }
+	            }
+	            
+	            if (tieneNumeros) {
+	                System.out.println(ROJO + "❌ Error!!!: No se permiten números." + RESET);
+	            } else if (tieneCaracteresInvalidos) {
+	                System.out.println(ROJO + "❌ Error!!!: Solo se permiten letras, comas (,) y una barra (/)." + RESET);
+	            } else if (!formatoCorrecto) {
+	                System.out.println(ROJO + "❌ Error!!!: El formato debe ser palabra1,palabra2/palabra1,palabra2 y tener la misma cantidad en ambos lados." + RESET);
+	            } else {
+	                datosCorrectos = true;
+	            }
+	        }
+	        
+	        if (manejadorArchivo.escribirArchivo(palabrasIngresadas)) {
+	            System.out.println(VERDE + "✅ Se agregaron las palabras correctamente." + RESET);
+	        } else {
+	            System.out.println(ROJO + "❌ Error al guardar el archivo." + RESET);
+	        }
+
 		
 	}
 
 	@Override
 	public void eliminarArchivo() {
-		// TODO Auto-generated method stub
+		
+		String RESET = "\u001B[0m";
+        String ROJO = "\u001B[91m";
+        String VERDE = "\u001B[32m";
+        
+        if (manejadorArchivo.existeArchivo()) {
+            if (manejadorArchivo.eliminarArchivo()) {
+                System.out.println(VERDE + "Se ha eliminado el archivo con éxito" + RESET);
+                manejadorArchivo.crearArchivo();
+            } else {
+                System.out.println(ROJO + "Error al eliminar el archivo de texto" + RESET);
+            }
+        } else {
+            System.out.println(ROJO + "Error, el archivo que intentas eliminar no existe" + RESET);
+        }
 		
 	}
 	
