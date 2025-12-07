@@ -590,6 +590,15 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
     }
 
 	
+	public int buscarLetra(char[] letrasDisponibles, char letraBuscada) {
+        for (int i = 0; i < letrasDisponibles.length; i++) {
+            if (letrasDisponibles[i] == letraBuscada) {
+                return i; 
+            }
+        }
+        return -1; 
+    }
+
 	
 	
 }
