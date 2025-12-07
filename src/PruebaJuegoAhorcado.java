@@ -429,6 +429,37 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
     }
 
 	
+	public boolean validarPalabrasParaJugar() {
+        String palabrasCargadas[] = null;
+        
+        try {
+            palabrasCargadas = cargarPalabras();
+        } catch (NullPointerException e) {
+            System.out.println("Ha ocurrido un error " + Arrays.toString(palabrasCargadas));
+            llenarArchivo();
+        }
+        
+        palabrasCargadas = cargarPalabras();
+        
+        do {
+            if (palabrasCargadas == null) {
+                llenarArchivo();
+                palabrasCargadas = cargarPalabras();
+            } else {
+                break;
+            }
+        } while (palabrasCargadas != null);
+        
+        if (verificarLlenadoDePalabras(palabrasCargadas) == false) {
+            System.out.println("---------------------------------------------------------------------------------------------------------------");
+            System.out.println("ERROR!! Ingresaste caracteres que no son letras en el archivo");
+            System.out.println("Inténtalo de NUEVO...");
+            System.out.println("---------------------------------------------------------------------------------------------------------------");
+            return false;
+        }
+        return true;
+    }
+
 	
 	
 }
