@@ -407,6 +407,30 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
 		
 	}
 	
+	
+	
+	
+	
+	
+	public boolean verificarLlenadoDePalabras(String palabrasGuardadas[]) {
+        String cad = "";
+        for (int i = 0; i < palabrasGuardadas.length; i++) {
+            cad = cad + palabrasGuardadas[i].replace(",", "");
+        }
+        
+        int caracteresValidos = 0;
+        for (int j = 0; j < cad.length(); j++) {
+            if (Character.isLetter(cad.charAt(j)) == true) {
+                caracteresValidos++;
+            }
+        }
+        
+        return caracteresValidos == cad.length();
+    }
+
+	
+	
+	
 }
 
 
