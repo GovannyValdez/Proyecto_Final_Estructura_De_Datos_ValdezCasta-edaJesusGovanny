@@ -66,7 +66,18 @@ class Pila{
 	        return tope == -1;
 	    }
 
-	
+	    
+	    
+	    public String pop() {
+	        if (!estaVacia()) {
+	            String elemento = elementos[tope];
+	            tope--;
+	            return elemento;
+	        }
+	        return null;
+	    }
+
+	    
 	
 	
 }
