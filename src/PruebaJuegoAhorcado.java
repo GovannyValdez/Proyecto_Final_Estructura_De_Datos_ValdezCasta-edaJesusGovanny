@@ -276,7 +276,37 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
 
 	@Override
 	public void verificarArchivo() {
-		// TODO Auto-generated method stub
+		
+		String palabras[] = null;
+        String ROJO = "\u001B[91m";
+        String RESET = "\u001B[0m";
+        String VERDE = "\u001B[32m";
+        String AMARILLO = "\u001B[33m";
+        
+        String contenido = manejadorArchivo.leerArchivo();
+        
+        if (contenido == null || contenido.isEmpty()) {
+            System.out.println(ROJO + "El archivo de texto está vacío" + RESET);
+            System.out.println("Llena el archivo");
+            llenarArchivo();
+            return;
+        }
+        
+        String separacion = "";
+        for (int i = 0; i < contenido.length(); i++) {
+            if (!(contenido.substring(i, i+1).equals("/"))) {
+                separacion = separacion + contenido.substring(i, i+1).toUpperCase();
+            } else {
+                separacion = separacion + "/";
+            }
+        }
+        
+        palabras = separacion.split(",");
+        
+        System.out.println(VERDE + "Cargando..." + RESET);
+        System.out.println("Las palabras cargadas son: " + AMARILLO + Arrays.toString(palabras) + RESET);
+        System.out.println("Se cargaron: " + palabras.length + " palabras");
+
 		
 	}
 
