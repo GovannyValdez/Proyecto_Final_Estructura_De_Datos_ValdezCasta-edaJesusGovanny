@@ -899,7 +899,10 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
 public class PruebaJuegoAhorcado {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		
+		JuegoAhorcado juegoA = new JuegoAhorcado();
+        juegoA.menuOpciones();
+		
 		
 	}
 
