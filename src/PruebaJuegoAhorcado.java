@@ -43,14 +43,14 @@ class Pila{
 	
 	
 	 	private String[] elementos;
-	    private int tope;
+	    private int cima;
 	    private int capacidad;
 	    
 	    public Pila(int capacidad) {
 	    	
 	        this.capacidad = capacidad;
 	        this.elementos = new String[capacidad];
-	        this.tope = -1;
+	        this.cima = -1;
 	        
 	    }
 	    
@@ -58,16 +58,16 @@ class Pila{
 	    
 	    public void push(String elemento) {
 	    	
-	        if (tope < capacidad - 1) {
-	            tope++;
-	            elementos[tope] = elemento;
+	        if (cima < capacidad - 1) {
+	            cima++;
+	            elementos[cima] = elemento;
 	        }
 	    }
 
 	    
 	    public boolean estaVacia() {
 	    	
-	        return tope == -1;
+	        return cima == -1;
 	        
 	    }
 
@@ -77,8 +77,8 @@ class Pila{
 	    	
 	        if (!estaVacia()) {
 	        	
-	            String elemento = elementos[tope];
-	            tope--;
+	            String elemento = elementos[cima];
+	            cima--;
 	            return elemento;
 	            
 	        }
@@ -91,7 +91,7 @@ class Pila{
 	    	
 	        if (!estaVacia()) {
 	        	
-	            return elementos[tope];
+	            return elementos[cima];
 	        }
 	        
 	        return null;
@@ -100,14 +100,14 @@ class Pila{
 	    
 	    public int tamanio() {
 	    	
-	        return tope + 1;
+	        return cima + 1;
 	    }
 	    
 	    public String[] obtenerElementos() {
 	    	
-	        String[] resultado = new String[tope + 1];
+	        String[] resultado = new String[cima + 1];
 	        
-	        for (int i = 0; i <= tope; i++) {
+	        for (int i = 0; i <= cima; i++) {
 	        	
 	            resultado[i] = elementos[i];
 	            
@@ -119,7 +119,7 @@ class Pila{
 
 	    public boolean contiene(String elemento) {
 	    	
-	        for (int i = 0; i <= tope; i++) {
+	        for (int i = 0; i <= cima; i++) {
 	        	
 	            if (elementos[i] != null && elementos[i].equals(elemento)) {
 	            	
@@ -250,7 +250,9 @@ class ManejadorArchivo{
     
     
     public String[] cargarPalabras() {
+    	
         String contenido = leerArchivo();
+        
         
         if (contenido != null && !contenido.isEmpty()) {
         	
@@ -270,6 +272,7 @@ class ManejadorArchivo{
             
             return separacion.split("/");
         }
+        
         return null;
         
     }
@@ -302,11 +305,13 @@ class ManejadorArchivo{
         for (int gap = n / 2; gap > 0; gap /= 2) {
         	
             for (int i = gap; i < n; i++) {
+            	
                 String temp = palabrasOrdenadas[i];
                 int j;
                 
                 for (j = i; j >= gap && palabrasOrdenadas[j - gap].compareTo(temp) > 0; j -= gap) {
                     palabrasOrdenadas[j] = palabrasOrdenadas[j - gap];
+                    
                 }
                 
                 palabrasOrdenadas[j] = temp;
@@ -745,6 +750,8 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
 	
 	public String elegirPalabra(String arreglo[]) {
         Scanner scanner = new Scanner(System.in);
+        String AZUL = "\u001B[36m";
+        String RESET = "\u001B[0m";
         
         
         String palabrasEsp[] = arreglo[0].split(",");
@@ -756,6 +763,9 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
         
         System.out.println("--------------------------------------------------------------");
         System.out.println("Bienvenido al juego del Ahorcado");
+        System.out.println(AZUL+"╔══════════════════════════════════════════╗"+RESET);
+        System.out.println(AZUL+"║             JUEGO DEL AHORCADO           ║"+RESET);
+        System.out.println(AZUL+"╚══════════════════════════════════════════╝"+RESET);
         
         do {
         	
@@ -789,7 +799,7 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
     }
 
 	//buequeda lineal
-	public int buscarLetra(char[] letrasDisponibles, char letraBuscada) {
+	/*public int buscarLetra(char[] letrasDisponibles, char letraBuscada) {
 		
         for (int i = 0; i < letrasDisponibles.length; i++) {
             if (letrasDisponibles[i] == letraBuscada) {
@@ -798,7 +808,35 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
         }
         return -1; 
         
-    }
+    }*/
+	
+	//busqueda binaria
+	public int buscarLetra(char[] letrasDisponibles, char letraBuscada) {
+
+	    int inicio = 0;
+	    int fin = letrasDisponibles.length - 1;
+
+	    while (inicio <= fin) {
+
+	        int medio = (inicio + fin) / 2;
+
+	        if (letrasDisponibles[medio] == letraBuscada) {
+	            return medio;  
+	        }
+
+	        if (letrasDisponibles[medio] > letraBuscada) {
+	            fin = medio - 1;
+	        } 
+	        else {
+	            inicio = medio + 1;
+	        }
+	    }
+
+	    return -1; 
+	}
+
+	
+	
 
 	
 	 public void inicioAhorcado(String palabraSecretaMasIdioma) {
@@ -824,9 +862,9 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
 	        }
 	        
 	        if (idioma.equalsIgnoreCase("2")) {
-	            System.out.println("Estoy pensando en una palabra en INGLÉS con " + palabraSecreta.length() + " letras");
+	            System.out.println(AMARILLO +"Estoy pensando en una palabra en INGLÉS con " + palabraSecreta.length() + " letras"+RESET);
 	        } else {
-	            System.out.println("Estoy pensando en una palabra en ESPAÑOL con " + palabraSecreta.length() + " letras");
+	            System.out.println(AMARILLO +"Estoy pensando en una palabra en ESPAÑOL con " + palabraSecreta.length() + " letras"+RESET);
 	        }
 	        
 	        System.out.println("--------------------------------------------------------------");
@@ -855,12 +893,12 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
 	                char charLetra = letra.charAt(0);
 	                
 	                if (charLetra >= 48 && charLetra <= 57) {
-	                    System.out.println("Esto no es una letra, es un número");
+	                    System.out.println(ROJO +"Esto no es una letra, es un número"+RESET);
 	                    continue;
 	                }
 	                
 	                if (!Character.isLetter(charLetra)) {
-	                    System.out.println("Ingresaste un carácter especial");
+	                    System.out.println(ROJO +"Ingresaste un carácter especial"+RESET);
 	                    continue;
 	                }
 	                
@@ -919,6 +957,8 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
 	            System.out.println("La palabra secreta era: " + AMARILLO + palabraSecreta + RESET);
 	        } else if (ganador == true) {
 	            System.out.println(VERDE + "¡Felicidades! GANASTE :D!!!" + RESET);
+	        	//JOptionPane.showMessageDialog(null, "¡Felicidades, ganaste!");
+
 	        }
 	    }
 	
