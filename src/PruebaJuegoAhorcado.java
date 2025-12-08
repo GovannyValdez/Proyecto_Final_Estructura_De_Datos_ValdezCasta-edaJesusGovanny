@@ -341,8 +341,7 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
 	@Override
 	public void verificarArchivo() {
 		
-		String palabras[] = null;
-        String ROJO = "\u001B[91m";
+		String ROJO = "\u001B[91m";
         String RESET = "\u001B[0m";
         String VERDE = "\u001B[32m";
         String AMARILLO = "\u001B[33m";
@@ -350,32 +349,49 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
         String contenido = manejadorArchivo.leerArchivo();
         
         if (contenido == null || contenido.isEmpty()) {
-        	
             System.out.println(ROJO + "El archivo de texto está vacío" + RESET);
             System.out.println("Llena el archivo");
             llenarArchivo();
             return;
-            
         }
         
         String separacion = "";
         for (int i = 0; i < contenido.length(); i++) {
-        	
             if (!(contenido.substring(i, i+1).equals("/"))) {
-            	
                 separacion = separacion + contenido.substring(i, i+1).toUpperCase();
-                
             } else {
-            	
                 separacion = separacion + "/";
             }
         }
         
-        palabras = separacion.split(",");
+        String[] idiomas = separacion.split("/");
+        
+        int totalPalabras = 0;
+        String[] palabrasEspanol = null;
+        String[] palabrasIngles = null;
+        
+        if (idiomas.length >= 1) {
+            palabrasEspanol = idiomas[0].split(",");
+            totalPalabras += palabrasEspanol.length;
+        }
+        if (idiomas.length >= 2) {
+            palabrasIngles = idiomas[1].split(",");
+            totalPalabras += palabrasIngles.length;
+        }
         
         System.out.println(VERDE + "Cargando..." + RESET);
-        System.out.println("Las palabras cargadas son: " + AMARILLO + Arrays.toString(palabras) + RESET);
-        System.out.println("Se cargaron: " + palabras.length + " palabras");
+        System.out.println("Contenido del archivo: " + AMARILLO + separacion + RESET);
+        
+        if (palabrasEspanol != null) {
+        	
+            System.out.println("Palabras en ESPAÑOL: " + AMARILLO + Arrays.toString(palabrasEspanol) + RESET);
+        }
+        if (palabrasIngles != null) {
+        	
+            System.out.println("Palabras en INGLÉS: " + AMARILLO + Arrays.toString(palabrasIngles) + RESET);
+        }
+        
+        System.out.println("Se cargaron: " + VERDE + totalPalabras + RESET + " palabras en total");
 
 		
 	}
