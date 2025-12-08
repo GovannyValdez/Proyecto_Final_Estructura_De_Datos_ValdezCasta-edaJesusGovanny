@@ -341,58 +341,113 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
 	@Override
 	public void verificarArchivo() {
 		
-		String ROJO = "\u001B[91m";
-        String RESET = "\u001B[0m";
-        String VERDE = "\u001B[32m";
-        String AMARILLO = "\u001B[33m";
-        
-        String contenido = manejadorArchivo.leerArchivo();
-        
-        if (contenido == null || contenido.isEmpty()) {
-            System.out.println(ROJO + "El archivo de texto está vacío" + RESET);
-            System.out.println("Llena el archivo");
-            llenarArchivo();
-            return;
-        }
-        
-        String separacion = "";
-        for (int i = 0; i < contenido.length(); i++) {
-            if (!(contenido.substring(i, i+1).equals("/"))) {
-                separacion = separacion + contenido.substring(i, i+1).toUpperCase();
-            } else {
-                separacion = separacion + "/";
-            }
-        }
-        
-        String[] idiomas = separacion.split("/");
-        
-        int totalPalabras = 0;
-        String[] palabrasEspanol = null;
-        String[] palabrasIngles = null;
-        
-        if (idiomas.length >= 1) {
-            palabrasEspanol = idiomas[0].split(",");
-            totalPalabras += palabrasEspanol.length;
-        }
-        if (idiomas.length >= 2) {
-            palabrasIngles = idiomas[1].split(",");
-            totalPalabras += palabrasIngles.length;
-        }
-        
-        System.out.println(VERDE + "Cargando..." + RESET);
-        System.out.println("Contenido del archivo: " + AMARILLO + separacion + RESET);
-        
-        if (palabrasEspanol != null) {
-        	
-            System.out.println("Palabras en ESPAÑOL: " + AMARILLO + Arrays.toString(palabrasEspanol) + RESET);
-        }
-        if (palabrasIngles != null) {
-        	
-            System.out.println("Palabras en INGLÉS: " + AMARILLO + Arrays.toString(palabrasIngles) + RESET);
-        }
-        
-        System.out.println("Se cargaron: " + VERDE + totalPalabras + RESET + " palabras en total");
+		Scanner scanner = new Scanner(System.in);
+	    String RESET = "\u001B[0m";
+	    String VERDE = "\u001B[32m";
+	    String AMARILLO = "\u001B[33m";
+	    String ROJO = "\u001B[91m";
+	    String AZUL = "\u001B[36m";
 
+	    String contenidoActual = manejadorArchivo.leerArchivo();
+
+	    System.out.println("-----------------------------------------------------------");
+	    System.out.println(AZUL + "        📄 VERIFICACIÓN DEL ARCHIVO CARGADO" + RESET);
+	    System.out.println("-----------------------------------------------------------");
+
+	    if (contenidoActual == null || contenidoActual.isEmpty()) {
+	        System.out.println(ROJO + "⚠ El archivo está vacío. No hay palabras cargadas." + RESET);
+	        llenarArchivo();
+	        return;
+	    } else {
+	        System.out.println("Contenido actual:");
+	        System.out.println(AMARILLO + contenidoActual + RESET);
+	        System.out.println("-----------------------------------------------------------");
+
+	        String partes[] = contenidoActual.split("/");
+
+	        if (partes.length == 2) {
+	            String palabrasEsp[] = partes[0].split(",");
+	            String palabrasIng[] = partes[1].split(",");
+
+	            System.out.println(VERDE + "Cantidad ESPAÑOL: " + palabrasEsp.length + RESET);
+	            System.out.println(VERDE + "Cantidad INGLÉS : " + palabrasIng.length + RESET);
+
+	            System.out.println("-----------------------------------------------------------");
+	            System.out.println(AZUL + "Palabras en ESPAÑOL:" + RESET);
+	            for (int i = 0; i < palabrasEsp.length; i++) {
+	                System.out.println(" - " + palabrasEsp[i]);
+	            }
+
+	            System.out.println("-----------------------------------------------------------");
+	            System.out.println(AZUL + "Palabras en INGLÉS:" + RESET);
+	            for (int i = 0; i < palabrasIng.length; i++) {
+	                System.out.println(" - " + palabrasIng[i]);
+	            }
+	        }
+	    }
+
+	    System.out.println("-----------------------------------------------------------");
+	    System.out.print("¿Deseas agregar nuevas palabras? (S/N): ");
+	    String respuesta = scanner.nextLine().trim().toUpperCase();
+
+	    if (!respuesta.equals("S")) {
+	        System.out.println(VERDE + "Regresando al menú..." + RESET);
+	        return;
+	    }
+
+	    boolean datosCorrectos = false;
+	    String palabrasIngresadas = "";
+
+	    while (!datosCorrectos) {
+
+	        System.out.println("Formato: esp1,esp2/ing1,ing2");
+	        System.out.print("Ingrese las NUEVAS palabras: ");
+	        palabrasIngresadas = scanner.nextLine().toUpperCase().replace(" ", "");
+
+	        boolean tieneNumeros = palabrasIngresadas.matches(".*\\d.*");
+	        boolean tieneCaracteresInvalidos = !palabrasIngresadas.matches("[A-ZÑ,\\/]+");
+
+	        boolean formatoCorrecto = false;
+	        if (palabrasIngresadas.contains("/")) {
+	            String[] partesNuevas = palabrasIngresadas.split("/");
+	            if (partesNuevas.length == 2) {
+	                String[] esp = partesNuevas[0].split(",");
+	                String[] ing = partesNuevas[1].split(",");
+	                if (esp.length == ing.length && esp.length > 0) {
+	                    formatoCorrecto = true;
+	                }
+	            }
+	        }
+
+	        if (tieneNumeros) {
+	            System.out.println(ROJO + "❌ No se permiten números." + RESET);
+	        } else if (tieneCaracteresInvalidos) {
+	            System.out.println(ROJO + "❌ Solo letras, comas y una barra (/)." + RESET);
+	        } else if (!formatoCorrecto) {
+	            System.out.println(ROJO + "❌ Formato inválido." + RESET);
+	        } else {
+	            datosCorrectos = true;
+	        }
+	    }
+
+	    String contenidoFinal;
+
+	    if (contenidoActual == null || contenidoActual.isEmpty()) {
+	        contenidoFinal = palabrasIngresadas;
+	    } else {
+	        String[] actual = contenidoActual.split("/");
+	        String[] nuevo = palabrasIngresadas.split("/");
+
+	        String nuevoEsp = actual[0] + "," + nuevo[0];
+	        String nuevoIng = actual[1] + "," + nuevo[1];
+
+	        contenidoFinal = nuevoEsp + "/" + nuevoIng;
+	    }
+
+	    manejadorArchivo.escribirArchivo(contenidoFinal);
+
+	    System.out.println(VERDE + "✔ Palabras agregadas correctamente." + RESET);
+	    System.out.println("-----------------------------------------------------------");
 		
 	}
 
@@ -417,73 +472,82 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
 	public void llenarArchivo() {
 		
 		 Scanner scanner = new Scanner(System.in);
-		 
-	        String VERDE = "\u001B[32m";
-	        String RESET = "\u001B[0m";
-	        String AMARILLO = "\u001B[33m";
-	        String ROJO = "\u001B[91m";
-	        
-	        System.out.println("╔══════════════════════════════════════════════════════════════════════════════╗");
-	        System.out.println("║ " + VERDE + "                    ««««««« Instrucciones »»»»»»»   " + RESET + "                         ║");
-	        System.out.println("╠══════════════════════════════════════════════════════════════════════════════╣");
-	        System.out.println("║ -Llenar a continuación el archivo con palabras en español e inglés           ║");
-	        System.out.println("║ -Las palabras en español e inglés se separan con una barra diagonal (/)      ║");
-	        System.out.println("║ -Separar cada palabra con una coma (,)                                       ║");
-	        System.out.println("║                                                                              ║");
-	        System.out.println("║ " + AMARILLO + "Ejemplo: hola,donde/hello,where" + RESET + "                                              ║");
-	        System.out.println("╚══════════════════════════════════════════════════════════════════════════════╝");
-	        
-	        boolean datosCorrectos = false;
-	        String palabrasIngresadas = "";
-	        
-	        while (!datosCorrectos) {
-	            System.out.print("Ingrese las palabras: ");
-	            palabrasIngresadas = scanner.nextLine().toUpperCase().replace(" ", "");
-	            
-	            boolean tieneNumeros = palabrasIngresadas.matches(".*\\d.*");
-	            boolean tieneCaracteresInvalidos = !palabrasIngresadas.matches("[A-ZÑ,\\/]+");
-	            
-	            boolean formatoCorrecto = false;
-	            
-	            if (palabrasIngresadas.contains("/")) {
-	            	
-	                String[] partes = palabrasIngresadas.split("/");
-	                
-	                if (partes.length == 2) {
-	                	
-	                    String[] palabrasEspanol = partes[0].split(",");
-	                    String[] palabrasIngles = partes[1].split(",");
-	                    if (palabrasEspanol.length == palabrasIngles.length && palabrasEspanol.length > 0) {
-	                        formatoCorrecto = true;
-	                    }
-	                }
-	            }
-	            
-	            if (tieneNumeros) {
-	            	
-	                System.out.println(ROJO + "❌ Error!!!: No se permiten números." + RESET);
-	            
-	            } else if (tieneCaracteresInvalidos) {
-	            	
-	                System.out.println(ROJO + "❌ Error!!!: Solo se permiten letras, comas (,) y una barra (/)." + RESET);
-	            
-	            } else if (!formatoCorrecto) {
-	            	
-	                System.out.println(ROJO + "❌ Error!!!: El formato debe ser palabra1,palabra2/palabra1,palabra2 y tener la misma cantidad en ambos lados." + RESET);
-	            } else {
-	                
-	            	datosCorrectos = true;
-	            }
-	        }
-	        
-	        if (manejadorArchivo.escribirArchivo(palabrasIngresadas)) {
-	        	
-	            System.out.println(VERDE + "✅ Se agregaron las palabras correctamente." + RESET);
-	        } else {
-	        	
-	            System.out.println(ROJO + "❌ Error al guardar el archivo." + RESET);
-	        }
 
+		    String VERDE = "\u001B[32m";
+		    String RESET = "\u001B[0m";
+		    String AMARILLO = "\u001B[33m";
+		    String ROJO = "\u001B[91m";
+
+		    System.out.println("╔══════════════════════════════════════════════════════════════════════════════╗");
+		    System.out.println("║ " + VERDE + "                    ««««««« Instrucciones »»»»»»»   " + RESET + "                         ║");
+		    System.out.println("╠══════════════════════════════════════════════════════════════════════════════╣");
+		    System.out.println("║ -Llenar el archivo con palabras en español e inglés SIN borrar las existentes║");
+		    System.out.println("║ -Formato: palabra1,palabra2/palabra1,palabra2                                ║");
+		    System.out.println("║ -Misma cantidad en Español e Inglés                                          ║");
+		    System.out.println("║                                                                              ║");
+		    System.out.println("║ " + AMARILLO + "Ejemplo: hola,donde/hello,where" + RESET + "                                              ║");
+		    System.out.println("╚══════════════════════════════════════════════════════════════════════════════╝");
+
+		    boolean datosCorrectos = false;
+		    String palabrasIngresadas = "";
+
+		    while (!datosCorrectos) {
+
+		        System.out.print("Ingrese las palabras: ");
+		        palabrasIngresadas = scanner.nextLine().toUpperCase().replace(" ", "");
+
+		        boolean tieneNumeros = palabrasIngresadas.matches(".*\\d.*");
+		        boolean tieneCaracteresInvalidos = !palabrasIngresadas.matches("[A-ZÑ,\\/]+");
+
+		        boolean formatoCorrecto = false;
+
+		        if (palabrasIngresadas.contains("/")) {
+		            String[] partes = palabrasIngresadas.split("/");
+
+		            if (partes.length == 2) {
+
+		                String[] palabrasEspanol = partes[0].split(",");
+		                String[] palabrasIngles = partes[1].split(",");
+
+		                if (palabrasEspanol.length == palabrasIngles.length && palabrasEspanol.length > 0) {
+		                    formatoCorrecto = true;
+		                }
+		            }
+		        }
+
+		        if (tieneNumeros) {
+		            System.out.println(ROJO + "❌ Error!!!: No se permiten números." + RESET);
+		        } else if (tieneCaracteresInvalidos) {
+		            System.out.println(ROJO + "❌ Error!!!: Solo letras, comas y una barra (/)." + RESET);
+		        } else if (!formatoCorrecto) {
+		            System.out.println(ROJO + "❌ Formato inválido o cantidades diferentes." + RESET);
+		        } else {
+		            datosCorrectos = true;
+		        }
+		    }
+
+		    String contenidoActual = manejadorArchivo.leerArchivo();
+
+		    String contenidoFinal;
+
+		    if (contenidoActual == null || contenidoActual.isEmpty()) {
+		        contenidoFinal = palabrasIngresadas;
+		    } else {
+
+		        String[] actual = contenidoActual.split("/");
+		        String[] nuevo = palabrasIngresadas.split("/");
+
+		        String nuevoEsp = actual[0] + "," + nuevo[0];
+		        String nuevoIng = actual[1] + "," + nuevo[1];
+
+		        contenidoFinal = nuevoEsp + "/" + nuevoIng;
+		    }
+
+		    if (manejadorArchivo.escribirArchivo(contenidoFinal)) {
+		        System.out.println(VERDE + "✅ Se agregaron las palabras correctamente." + RESET);
+		    } else {
+		        System.out.println(ROJO + "❌ Error al guardar el archivo." + RESET);
+		    }
 		
 	}
 
