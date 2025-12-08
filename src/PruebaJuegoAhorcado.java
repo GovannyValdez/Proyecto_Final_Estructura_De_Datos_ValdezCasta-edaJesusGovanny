@@ -760,7 +760,54 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
 
 	
 	
-	
+	 public String obtenerLetrasDisponibles(String idioma) {
+	        char[] letrasDisponibles;
+	        String[] letrasIngresadas = pilaLetrasIngresadas.obtenerElementos();
+	        
+	        if (idioma.equals("1")) {
+	            letrasDisponibles = new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'Ñ', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+	        } else {
+	            letrasDisponibles = new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+	        }
+	        
+	        for (int j = 0; j < letrasIngresadas.length; j++) {
+	            String letraIngresada = letrasIngresadas[j];
+	            if (letraIngresada != null && !letraIngresada.equals(" ")) {
+	                char letra = letraIngresada.toUpperCase().charAt(0);
+	                
+	                int posicion = buscarLetra(letrasDisponibles, letra);
+	                if (posicion != -1) {
+	                    letrasDisponibles[posicion] = '_';
+	                }
+	            }
+	        }
+	        
+	        String letrasMayusculas = "";
+	        String letrasMinusculas = "";
+	        
+	        for (int i = 0; i < letrasDisponibles.length; i++) {
+	            if (letrasDisponibles[i] != '_') {
+	                letrasMayusculas += letrasDisponibles[i] + " ";
+	                if (letrasDisponibles[i] == 'Ñ') {
+	                    letrasMinusculas += "ñ ";
+	                } else {
+	                    letrasMinusculas += Character.toLowerCase(letrasDisponibles[i]) + " ";
+	                }
+	            } else {
+	                letrasMayusculas += "_ ";
+	            }
+	        }
+	        
+	        if (letrasMayusculas.length() > 0) {
+	            letrasMayusculas = letrasMayusculas.substring(0, letrasMayusculas.length() - 1);
+	        }
+	        if (letrasMinusculas.length() > 0) {
+	            letrasMinusculas = letrasMinusculas.substring(0, letrasMinusculas.length() - 1);
+	        }
+	        
+	        return letrasMayusculas + "\n" + letrasMinusculas;
+	    }
+
 	
 	
 	public void mostrarMonito(byte intentosRestantes) {
