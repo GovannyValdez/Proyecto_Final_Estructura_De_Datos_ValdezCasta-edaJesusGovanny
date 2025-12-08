@@ -14,6 +14,7 @@ interface ahorcadoInterface {
     public void crearArchivo();
     public void llenarArchivo();
     public void eliminarArchivo();
+    
 }
 
 class Oportunidades {
@@ -50,11 +51,13 @@ class Pila{
 	        this.capacidad = capacidad;
 	        this.elementos = new String[capacidad];
 	        this.tope = -1;
+	        
 	    }
 	    
 	    
 	    
 	    public void push(String elemento) {
+	    	
 	        if (tope < capacidad - 1) {
 	            tope++;
 	            elementos[tope] = elemento;
@@ -63,17 +66,23 @@ class Pila{
 
 	    
 	    public boolean estaVacia() {
+	    	
 	        return tope == -1;
+	        
 	    }
 
 	    
 	    
 	    public String pop() {
+	    	
 	        if (!estaVacia()) {
+	        	
 	            String elemento = elementos[tope];
 	            tope--;
 	            return elemento;
+	            
 	        }
+	        
 	        return null;
 	    }
 
@@ -81,8 +90,10 @@ class Pila{
 	    public String peek() {
 	    	
 	        if (!estaVacia()) {
+	        	
 	            return elementos[tope];
 	        }
+	        
 	        return null;
 	    }
 
@@ -95,9 +106,13 @@ class Pila{
 	    public String[] obtenerElementos() {
 	    	
 	        String[] resultado = new String[tope + 1];
+	        
 	        for (int i = 0; i <= tope; i++) {
+	        	
 	            resultado[i] = elementos[i];
+	            
 	        }
+	        
 	        return resultado;
 	    }
 
@@ -105,10 +120,13 @@ class Pila{
 	    public boolean contiene(String elemento) {
 	    	
 	        for (int i = 0; i <= tope; i++) {
+	        	
 	            if (elementos[i] != null && elementos[i].equals(elemento)) {
+	            	
 	                return true;
 	            }
 	        }
+	        
 	        return false;
 	    }
 	
@@ -121,7 +139,9 @@ class ManejadorArchivo{
 	private String nombreArchivo;
     
     public ManejadorArchivo(String nombreArchivo) {
+    	
         this.nombreArchivo = nombreArchivo;
+        
     }
     
     
@@ -133,19 +153,29 @@ class ManejadorArchivo{
         String contenido = null;
         
         try {
+        	
             lectura = new FileReader(nombreArchivo);
             br = new BufferedReader(lectura);
             contenido = br.readLine();
+            
         } catch (Exception ex) {
+        	
             System.out.println("Error al leer el archivo");
+            
         } finally {
+        	
             try {
+            	
                 if (br != null) br.close();
                 if (lectura != null) lectura.close();
+                
             } catch (IOException e) {
+            	
                 e.printStackTrace();
+                
             }
         }
+        
         return contenido;
     }
 
@@ -154,14 +184,22 @@ class ManejadorArchivo{
     
     public boolean escribirArchivo(String contenido) {
         PrintWriter pw = null;
+        
         try {
+        	
             pw = new PrintWriter(nombreArchivo);
             pw.println(contenido);
+            
             return true;
+            
         } catch (FileNotFoundException e) {
+        	
             System.out.println("Error al escribir en el archivo");
+            
             return false;
+            
         } finally {
+        	
             if (pw != null) pw.close();
         }
     }
@@ -170,29 +208,41 @@ class ManejadorArchivo{
     
     
     public boolean existeArchivo() {
+    	
         File file = new File(nombreArchivo);
         return file.exists();
+        
     }
 
     
     
     public boolean crearArchivo() {
+    	
         File archivo = new File(nombreArchivo);
+        
         try {
+        	
             return archivo.createNewFile();
+            
         } catch (IOException e) {
+        	
             e.printStackTrace();
             return false;
+            
         }
     }
 
     
     
     public boolean eliminarArchivo() {
+    	
         File file = new File(nombreArchivo);
+        
         if (file.exists()) {
+        	
             return file.delete();
         }
+        
         return false;
     }
     
@@ -203,23 +253,32 @@ class ManejadorArchivo{
         String contenido = leerArchivo();
         
         if (contenido != null && !contenido.isEmpty()) {
+        	
             String separacion = "";
+            
             for (int i = 0; i < contenido.length(); i++) {
+            	
                 if (!(contenido.substring(i, i+1).equals("/"))) {
+                	
                     separacion = separacion + contenido.substring(i, i+1).toUpperCase();
+                
                 } else {
+                	
                     separacion = separacion + "/";
                 }
             }
+            
             return separacion.split("/");
         }
         return null;
+        
     }
 
     
     
     
     public boolean guardarPalabrasOrdenadas(String[] palabras) {
+    	
         palabras = ordenarPalabras(palabras);
         
         String contenido = "";
@@ -230,15 +289,18 @@ class ManejadorArchivo{
             }
         }
         return escribirArchivo(contenido);
+        
     }
     
     
     
     private String[] ordenarPalabras(String[] palabras) {
+    	
         String[] palabrasOrdenadas = palabras.clone();
         int n = palabrasOrdenadas.length;
         
         for (int gap = n / 2; gap > 0; gap /= 2) {
+        	
             for (int i = gap; i < n; i++) {
                 String temp = palabrasOrdenadas[i];
                 int j;
@@ -262,13 +324,15 @@ class ManejadorArchivo{
 
 class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
 	
-	 private File archivo;
+	 	private File archivo;
 	    private ManejadorArchivo manejadorArchivo;
 	    private Pila pilaLetrasIngresadas; 
 	    
 	    public JuegoAhorcado() {
+	    	
 	        manejadorArchivo = new ManejadorArchivo("archivo.txt");
 	        pilaLetrasIngresadas = new Pila(30); 
+	        
 	    }
 	    
 
@@ -286,17 +350,23 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
         String contenido = manejadorArchivo.leerArchivo();
         
         if (contenido == null || contenido.isEmpty()) {
+        	
             System.out.println(ROJO + "El archivo de texto está vacío" + RESET);
             System.out.println("Llena el archivo");
             llenarArchivo();
             return;
+            
         }
         
         String separacion = "";
         for (int i = 0; i < contenido.length(); i++) {
+        	
             if (!(contenido.substring(i, i+1).equals("/"))) {
+            	
                 separacion = separacion + contenido.substring(i, i+1).toUpperCase();
+                
             } else {
+            	
                 separacion = separacion + "/";
             }
         }
@@ -318,8 +388,10 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
         
         if (manejadorArchivo.crearArchivo()) {
             System.out.println(VERDE + "Archivo creado con éxito" + RESET);
+            
         } else {
             System.out.println("Error al crear el archivo de texto");
+            
         }
 
 		
@@ -356,9 +428,13 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
 	            boolean tieneCaracteresInvalidos = !palabrasIngresadas.matches("[A-ZÑ,\\/]+");
 	            
 	            boolean formatoCorrecto = false;
+	            
 	            if (palabrasIngresadas.contains("/")) {
+	            	
 	                String[] partes = palabrasIngresadas.split("/");
+	                
 	                if (partes.length == 2) {
+	                	
 	                    String[] palabrasEspanol = partes[0].split(",");
 	                    String[] palabrasIngles = partes[1].split(",");
 	                    if (palabrasEspanol.length == palabrasIngles.length && palabrasEspanol.length > 0) {
@@ -368,19 +444,27 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
 	            }
 	            
 	            if (tieneNumeros) {
+	            	
 	                System.out.println(ROJO + "❌ Error!!!: No se permiten números." + RESET);
+	            
 	            } else if (tieneCaracteresInvalidos) {
+	            	
 	                System.out.println(ROJO + "❌ Error!!!: Solo se permiten letras, comas (,) y una barra (/)." + RESET);
+	            
 	            } else if (!formatoCorrecto) {
+	            	
 	                System.out.println(ROJO + "❌ Error!!!: El formato debe ser palabra1,palabra2/palabra1,palabra2 y tener la misma cantidad en ambos lados." + RESET);
 	            } else {
-	                datosCorrectos = true;
+	                
+	            	datosCorrectos = true;
 	            }
 	        }
 	        
 	        if (manejadorArchivo.escribirArchivo(palabrasIngresadas)) {
+	        	
 	            System.out.println(VERDE + "✅ Se agregaron las palabras correctamente." + RESET);
 	        } else {
+	        	
 	            System.out.println(ROJO + "❌ Error al guardar el archivo." + RESET);
 	        }
 
@@ -410,15 +494,15 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
 	
 	
 	
-	
-	
 	public boolean verificarLlenadoDePalabras(String palabrasGuardadas[]) {
         String cad = "";
+        
         for (int i = 0; i < palabrasGuardadas.length; i++) {
             cad = cad + palabrasGuardadas[i].replace(",", "");
         }
         
         int caracteresValidos = 0;
+        
         for (int j = 0; j < cad.length(); j++) {
             if (Character.isLetter(cad.charAt(j)) == true) {
                 caracteresValidos++;
@@ -433,31 +517,40 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
         String palabrasCargadas[] = null;
         
         try {
+        	
             palabrasCargadas = cargarPalabras();
+            
         } catch (NullPointerException e) {
+        	
             System.out.println("Ha ocurrido un error " + Arrays.toString(palabrasCargadas));
             llenarArchivo();
+            
         }
         
         palabrasCargadas = cargarPalabras();
         
         do {
+        	
             if (palabrasCargadas == null) {
                 llenarArchivo();
                 palabrasCargadas = cargarPalabras();
             } else {
                 break;
             }
+            
         } while (palabrasCargadas != null);
         
         if (verificarLlenadoDePalabras(palabrasCargadas) == false) {
+        	
             System.out.println("---------------------------------------------------------------------------------------------------------------");
             System.out.println("ERROR!! Ingresaste caracteres que no son letras en el archivo");
             System.out.println("Inténtalo de NUEVO...");
             System.out.println("---------------------------------------------------------------------------------------------------------------");
             return false;
+            
         }
         return true;
+        
     }
 
 	
@@ -471,6 +564,7 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
         char eleccion = ' ';
         
         do {
+        	
             System.out.println("╔════════════════════════════════════════════════════════╗");
             System.out.println("║ " + AZUL + "                   MENU PRINCIPAL                   " + RESET + "   ║");
             System.out.println("╠════════════════════════════════════════════════════════╣");
@@ -487,18 +581,23 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
             String opc = scanner.next();
             
             if (opc.length() == 1) {
+            	
                 eleccion = opc.charAt(0);
                 
                 switch (eleccion) {
+                
                     case '1':
+                    	
                         verificarArchivo();
                         break;
                     
                     case '2':
+                    	
                         llenarArchivo();
                         break;
                     
                     case '3':
+                    	
                         eliminarArchivo();
                         break;
                     
@@ -506,15 +605,19 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
                         String palabrasCargadas[] = null;
                         
                         if (validarPalabrasParaJugar() == false) {
+                        	
                             break;
                         } else {
+                        	
                             palabrasCargadas = cargarPalabras();
                         }
                         
                         String palabraSecreta = "";
                         
                         try {
+                        	
                             palabraSecreta = elegirPalabra(palabrasCargadas);
+                            
                         } catch (ArrayIndexOutOfBoundsException e) {
                             System.out.println("-----------------------------------------------------------------------------------------------");
                             System.out.println("Ha ocurrido un error parece que no llenaste correctamente el archivo de texto");
@@ -537,11 +640,14 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
                 System.out.println("----------------------------------------------------------------------------------");
             }
         } while (eleccion != '5');
+        
     }
 	
 	
 	public String[] cargarPalabras() {
+		
         return manejadorArchivo.cargarPalabras();
+        
     }
 
 	
@@ -549,6 +655,7 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
 	
 	public String elegirPalabra(String arreglo[]) {
         Scanner scanner = new Scanner(System.in);
+        
         
         String palabrasEsp[] = arreglo[0].split(",");
         String palabrasIng[] = arreglo[1].split(",");
@@ -561,6 +668,7 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
         System.out.println("Bienvenido al juego del Ahorcado");
         
         do {
+        	
             System.out.println("Elige en qué idioma quieres jugar");
             System.out.println("➤ 1) Jugar con palabras en ESPAÑOL");
             System.out.println("➤ 2) Jugar con palabras en INGLÉS");
@@ -587,16 +695,19 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
         
         palabraSecreta = palabraSecreta + "-" + op;
         return palabraSecreta;
+        
     }
 
 	
 	public int buscarLetra(char[] letrasDisponibles, char letraBuscada) {
+		
         for (int i = 0; i < letrasDisponibles.length; i++) {
             if (letrasDisponibles[i] == letraBuscada) {
                 return i; 
             }
         }
         return -1; 
+        
     }
 
 	
@@ -635,6 +746,7 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
 	                break;
 	            }
 	            
+	            
 	            System.out.println("Tienes " + getIntentos() + " oportunidades para adivinar");
 	            mostrarMonito(getIntentos());
 	            System.out.println();
@@ -647,6 +759,7 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
 	                System.out.println("Ingresaste más de un carácter");
 	                continue;
 	            }
+	            
 	            
 	            if (letra.length() == 1) {
 	                char charLetra = letra.charAt(0);
@@ -690,6 +803,7 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
 	                    descontarIntentos();
 	                }
 	                
+	                
 	                String palabraActual = obtenerPalabraAdivinada(palabraSecreta);
 	                for (int i = 0; i < palabraActual.length(); i++) {
 	                    if (palabraActual.codePointAt(i) <= 90 && palabraActual.codePointAt(i) >= 65) {
@@ -700,6 +814,7 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
 	                }
 	                System.out.println();
 	            }
+	            
 	            
 	            if (seAdivinoLaPalabra(palabraSecreta)) {
 	                ganador = true;
@@ -720,6 +835,8 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
 	
 	
 	 public boolean seAdivinoLaPalabra(String palabraSecreta) {
+		 
+		 
 	        String[] letrasIngresadas = pilaLetrasIngresadas.obtenerElementos();
 	        int cont = 0;
 	        
@@ -738,6 +855,7 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
 
 	 
 	 public String obtenerPalabraAdivinada(String palabraSecreta) {
+		 
 	        String[] letrasIngresadas = pilaLetrasIngresadas.obtenerElementos();
 	        String carac = "!#$%&/()=? '<>-_.:,;}";
 	        String palabraCodificada = "";
@@ -761,14 +879,18 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
 	
 	
 	 public String obtenerLetrasDisponibles(String idioma) {
+		 
 	        char[] letrasDisponibles;
 	        String[] letrasIngresadas = pilaLetrasIngresadas.obtenerElementos();
+	        
 	        
 	        if (idioma.equals("1")) {
 	            letrasDisponibles = new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'Ñ', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
 	        } else {
 	            letrasDisponibles = new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
 	        }
+	        
+	        
 	        
 	        for (int j = 0; j < letrasIngresadas.length; j++) {
 	            String letraIngresada = letrasIngresadas[j];
@@ -781,6 +903,8 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
 	                }
 	            }
 	        }
+	        
+	        
 	        
 	        String letrasMayusculas = "";
 	        String letrasMinusculas = "";
@@ -806,9 +930,12 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
 	        }
 	        
 	        return letrasMayusculas + "\n" + letrasMinusculas;
+	        
 	    }
 
 	
+	 
+	 
 	
 	public void mostrarMonito(byte intentosRestantes) {
         System.out.println("-----------");
@@ -892,8 +1019,6 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
     }
 	
 	
-	
-	
 }
 
 public class PruebaJuegoAhorcado {
@@ -903,6 +1028,8 @@ public class PruebaJuegoAhorcado {
 		JuegoAhorcado juegoA = new JuegoAhorcado();
         juegoA.menuOpciones();
 		
+        
+        
 		
 	}
 
