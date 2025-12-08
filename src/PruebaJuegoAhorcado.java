@@ -293,7 +293,7 @@ class ManejadorArchivo{
     }
     
     
-    
+    //shellsort
     private String[] ordenarPalabras(String[] palabras) {
     	
         String[] palabrasOrdenadas = palabras.clone();
@@ -366,6 +366,7 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
 	        String partes[] = contenidoActual.split("/");
 
 	        if (partes.length == 2) {
+	        	
 	            String palabrasEsp[] = partes[0].split(",");
 	            String palabrasIng[] = partes[1].split(",");
 
@@ -385,6 +386,8 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
 	            }
 	        }
 	    }
+	    
+	    
 
 	    System.out.println("-----------------------------------------------------------");
 	    System.out.print("¿Deseas agregar nuevas palabras? (S/N): ");
@@ -407,8 +410,11 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
 	        boolean tieneNumeros = palabrasIngresadas.matches(".*\\d.*");
 	        boolean tieneCaracteresInvalidos = !palabrasIngresadas.matches("[A-ZÑ,\\/]+");
 
+	        
 	        boolean formatoCorrecto = false;
+	        
 	        if (palabrasIngresadas.contains("/")) {
+	        	
 	            String[] partesNuevas = palabrasIngresadas.split("/");
 	            if (partesNuevas.length == 2) {
 	                String[] esp = partesNuevas[0].split(",");
@@ -433,8 +439,11 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
 	    String contenidoFinal;
 
 	    if (contenidoActual == null || contenidoActual.isEmpty()) {
+	    	
 	        contenidoFinal = palabrasIngresadas;
+	        
 	    } else {
+	    	
 	        String[] actual = contenidoActual.split("/");
 	        String[] nuevo = palabrasIngresadas.split("/");
 
@@ -450,6 +459,7 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
 	    System.out.println("-----------------------------------------------------------");
 		
 	}
+	
 
 	@Override
 	public void crearArchivo() {
@@ -778,7 +788,7 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
         
     }
 
-	
+	//buequeda lineal
 	public int buscarLetra(char[] letrasDisponibles, char letraBuscada) {
 		
         for (int i = 0; i < letrasDisponibles.length; i++) {
