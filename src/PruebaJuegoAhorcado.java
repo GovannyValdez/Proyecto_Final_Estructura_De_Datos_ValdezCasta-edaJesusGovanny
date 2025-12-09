@@ -1,4 +1,5 @@
 import java.io.*;
+import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -811,7 +812,7 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
     }*/
 	
 	//busqueda binaria
-	public int buscarLetra(char[] letrasDisponibles, char letraBuscada) {
+	/*public int buscarLetra(char[] letrasDisponibles, char letraBuscada) {
 
 	    int inicio = 0;
 	    int fin = letrasDisponibles.length - 1;
@@ -833,10 +834,41 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
 	    }
 
 	    return -1; 
-	}
+	}*/
 
 	
+	public int buscarLetraInterpolada(char[] letrasDisponibles, char letraBuscada) {
+
+	    int inicio = 0;
+	    int fin = letrasDisponibles.length - 1;
+
+	    while (inicio <= fin &&
+	           letraBuscada >= letrasDisponibles[inicio] &&
+	           letraBuscada <= letrasDisponibles[fin]) {
+
+	        int pos = inicio + 
+	                 ((letraBuscada - letrasDisponibles[inicio]) * (fin - inicio)) /
+	                 (letrasDisponibles[fin] - letrasDisponibles[inicio]);
+
+	        if (letrasDisponibles[pos] == letraBuscada) {
+	            return pos;
+	        }
+
+	        if (letrasDisponibles[pos] < letraBuscada) {
+	            inicio = pos + 1;
+	        } else {
+	            fin = pos - 1;
+	        }
+	    }
+
+	    return -1;
+	}
 	
+	
+	public int buscarLetra(char[] letrasDisponibles, char letraBuscada) {
+	    return buscarLetraInterpolada(letrasDisponibles, letraBuscada);
+	}
+
 
 	
 	 public void inicioAhorcado(String palabraSecretaMasIdioma) {
@@ -879,6 +911,10 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
 	            mostrarMonito(getIntentos());
 	            System.out.println();
 	            System.out.println("Letras disponibles: " + obtenerLetrasDisponibles(idioma));
+	            System.out.println("Letras ingresadas");
+	            System.out.println(Arrays.toString(pilaLetrasIngresadas.obtenerElementos())  );
+	           
+	            System.out.println();
 	            System.out.print("Ingresa una letra: ");
 	            
 	            String letra = scanner.next().toUpperCase();
@@ -1070,6 +1106,7 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
 	public void mostrarMonito(byte intentosRestantes) {
         System.out.println("-----------");
         
+        
         switch (intentosRestantes) {
             case 8:
                 System.out.println("   ");
@@ -1143,6 +1180,7 @@ class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
                 System.out.println("  |      / \\");
                 System.out.println(" _|___");
                 break;
+                
         }
         
         System.out.println("-----------");
