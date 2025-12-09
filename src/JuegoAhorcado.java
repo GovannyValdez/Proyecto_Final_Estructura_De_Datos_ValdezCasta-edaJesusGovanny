@@ -1,0 +1,867 @@
+
+import java.io.File;
+import java.util.Arrays;
+import java.util.Random;
+import java.util.Scanner;
+
+class JuegoAhorcado extends Oportunidades implements ahorcadoInterface {
+	
+	 	private File archivo;
+	    private ManejadorArchivo manejadorArchivo;
+	    private Pila pilaLetrasIngresadas; 
+	    
+	    public JuegoAhorcado() {
+	    	
+	        manejadorArchivo = new ManejadorArchivo("archivo.txt");
+	        pilaLetrasIngresadas = new Pila(30); 
+	        
+	    }
+	    
+
+	
+
+	@Override
+	public void verificarArchivo() {
+		
+		Scanner scanner = new Scanner(System.in);
+	    String RESET = "\u001B[0m";
+	    String VERDE = "\u001B[32m";
+	    String AMARILLO = "\u001B[33m";
+	    String ROJO = "\u001B[91m";
+	    String AZUL = "\u001B[36m";
+
+	    String contenidoActual = manejadorArchivo.leerArchivo();
+
+	    System.out.println("-----------------------------------------------------------");
+	    System.out.println(AZUL + "        📄 VERIFICACIÓN DEL ARCHIVO CARGADO" + RESET);
+	    System.out.println("-----------------------------------------------------------");
+
+	    if (contenidoActual == null || contenidoActual.isEmpty()) {
+	        System.out.println(ROJO + "⚠ El archivo está vacío. No hay palabras cargadas." + RESET);
+	        llenarArchivo();
+	        return;
+	    } else {
+	        System.out.println("Contenido actual:");
+	        System.out.println(AMARILLO + contenidoActual + RESET);
+	        System.out.println("-----------------------------------------------------------");
+
+	        String partes[] = contenidoActual.split("/");
+
+	        if (partes.length == 2) {
+	        	
+	            String palabrasEsp[] = partes[0].split(",");
+	            String palabrasIng[] = partes[1].split(",");
+
+	            System.out.println(VERDE + "Cantidad ESPAÑOL: " + palabrasEsp.length + RESET);
+	            System.out.println(VERDE + "Cantidad INGLÉS : " + palabrasIng.length + RESET);
+
+	            System.out.println("-----------------------------------------------------------");
+	            System.out.println(AZUL + "Palabras en ESPAÑOL:" + RESET);
+	            for (int i = 0; i < palabrasEsp.length; i++) {
+	                System.out.println(" - " + palabrasEsp[i]);
+	            }
+
+	            System.out.println("-----------------------------------------------------------");
+	            System.out.println(AZUL + "Palabras en INGLÉS:" + RESET);
+	            for (int i = 0; i < palabrasIng.length; i++) {
+	                System.out.println(" - " + palabrasIng[i]);
+	            }
+	        }
+	    }
+	    
+	    
+
+	    System.out.println("-----------------------------------------------------------");
+	    System.out.print("¿Deseas agregar nuevas palabras? (S/N): ");
+	    String respuesta = scanner.nextLine().trim().toUpperCase();
+
+	    if (!respuesta.equals("S")) {
+	        System.out.println(VERDE + "Regresando al menú..." + RESET);
+	        return;
+	    }
+
+	    boolean datosCorrectos = false;
+	    String palabrasIngresadas = "";
+
+	    while (!datosCorrectos) {
+
+	        System.out.println("Formato: esp1,esp2/ing1,ing2");
+	        System.out.print("Ingrese las NUEVAS palabras: ");
+	        palabrasIngresadas = scanner.nextLine().toUpperCase().replace(" ", "");
+
+	        boolean tieneNumeros = palabrasIngresadas.matches(".*\\d.*");
+	        boolean tieneCaracteresInvalidos = !palabrasIngresadas.matches("[A-ZÑ,\\/]+");
+
+	        
+	        boolean formatoCorrecto = false;
+	        
+	        if (palabrasIngresadas.contains("/")) {
+	        	
+	            String[] partesNuevas = palabrasIngresadas.split("/");
+	            if (partesNuevas.length == 2) {
+	                String[] esp = partesNuevas[0].split(",");
+	                String[] ing = partesNuevas[1].split(",");
+	                if (esp.length == ing.length && esp.length > 0) {
+	                    formatoCorrecto = true;
+	                }
+	            }
+	        }
+
+	        if (tieneNumeros) {
+	            System.out.println(ROJO + "❌ No se permiten números." + RESET);
+	        } else if (tieneCaracteresInvalidos) {
+	            System.out.println(ROJO + "❌ Solo letras, comas y una barra (/)." + RESET);
+	        } else if (!formatoCorrecto) {
+	            System.out.println(ROJO + "❌ Formato inválido." + RESET);
+	        } else {
+	            datosCorrectos = true;
+	        }
+	    }
+
+	    String contenidoFinal;
+
+	    if (contenidoActual == null || contenidoActual.isEmpty()) {
+	    	
+	        contenidoFinal = palabrasIngresadas;
+	        
+	    } else {
+	    	
+	        String[] actual = contenidoActual.split("/");
+	        String[] nuevo = palabrasIngresadas.split("/");
+
+	        String nuevoEsp = actual[0] + "," + nuevo[0];
+	        String nuevoIng = actual[1] + "," + nuevo[1];
+
+	        contenidoFinal = nuevoEsp + "/" + nuevoIng;
+	    }
+
+	    manejadorArchivo.escribirArchivo(contenidoFinal);
+
+	    System.out.println(VERDE + "✔ Palabras agregadas correctamente." + RESET);
+	    System.out.println("-----------------------------------------------------------");
+		
+	}
+	
+
+	@Override
+	public void crearArchivo() {
+		
+		String RESET = "\u001B[0m";
+        String VERDE = "\u001B[32m";
+        
+        if (manejadorArchivo.crearArchivo()) {
+            System.out.println(VERDE + "Archivo creado con éxito" + RESET);
+            
+        } else {
+            System.out.println("Error al crear el archivo de texto");
+            
+        }
+
+		
+	}
+
+	@Override
+	public void llenarArchivo() {
+		
+		 Scanner scanner = new Scanner(System.in);
+
+		    String VERDE = "\u001B[32m";
+		    String RESET = "\u001B[0m";
+		    String AMARILLO = "\u001B[33m";
+		    String ROJO = "\u001B[91m";
+
+		    System.out.println("╔══════════════════════════════════════════════════════════════════════════════╗");
+		    System.out.println("║ " + VERDE + "                    ««««««« Instrucciones »»»»»»»   " + RESET + "                         ║");
+		    System.out.println("╠══════════════════════════════════════════════════════════════════════════════╣");
+		    System.out.println("║ -Llenar el archivo con palabras en español e inglés SIN borrar las existentes║");
+		    System.out.println("║ -Formato: palabra1,palabra2/palabra1,palabra2                                ║");
+		    System.out.println("║ -Misma cantidad en Español e Inglés                                          ║");
+		    System.out.println("║                                                                              ║");
+		    System.out.println("║ " + AMARILLO + "Ejemplo: hola,donde/hello,where" + RESET + "                                              ║");
+		    System.out.println("╚══════════════════════════════════════════════════════════════════════════════╝");
+
+		    boolean datosCorrectos = false;
+		    String palabrasIngresadas = "";
+
+		    while (!datosCorrectos) {
+
+		        System.out.print("Ingrese las palabras: ");
+		        palabrasIngresadas = scanner.nextLine().toUpperCase().replace(" ", "");
+
+		        boolean tieneNumeros = palabrasIngresadas.matches(".*\\d.*");
+		        boolean tieneCaracteresInvalidos = !palabrasIngresadas.matches("[A-ZÑ,\\/]+");
+
+		        boolean formatoCorrecto = false;
+
+		        if (palabrasIngresadas.contains("/")) {
+		            String[] partes = palabrasIngresadas.split("/");
+
+		            if (partes.length == 2) {
+
+		                String[] palabrasEspanol = partes[0].split(",");
+		                String[] palabrasIngles = partes[1].split(",");
+
+		                if (palabrasEspanol.length == palabrasIngles.length && palabrasEspanol.length > 0) {
+		                    formatoCorrecto = true;
+		                }
+		            }
+		        }
+
+		        if (tieneNumeros) {
+		            System.out.println(ROJO + "❌ Error!!!: No se permiten números." + RESET);
+		        } else if (tieneCaracteresInvalidos) {
+		            System.out.println(ROJO + "❌ Error!!!: Solo letras, comas y una barra (/)." + RESET);
+		        } else if (!formatoCorrecto) {
+		            System.out.println(ROJO + "❌ Formato inválido o cantidades diferentes." + RESET);
+		        } else {
+		            datosCorrectos = true;
+		        }
+		    }
+
+		    String contenidoActual = manejadorArchivo.leerArchivo();
+
+		    String contenidoFinal;
+
+		    if (contenidoActual == null || contenidoActual.isEmpty()) {
+		        contenidoFinal = palabrasIngresadas;
+		    } else {
+
+		        String[] actual = contenidoActual.split("/");
+		        String[] nuevo = palabrasIngresadas.split("/");
+
+		        String nuevoEsp = actual[0] + "," + nuevo[0];
+		        String nuevoIng = actual[1] + "," + nuevo[1];
+
+		        contenidoFinal = nuevoEsp + "/" + nuevoIng;
+		    }
+
+		    if (manejadorArchivo.escribirArchivo(contenidoFinal)) {
+		        System.out.println(VERDE + "✅ Se agregaron las palabras correctamente." + RESET);
+		    } else {
+		        System.out.println(ROJO + "❌ Error al guardar el archivo." + RESET);
+		    }
+		
+	}
+
+	@Override
+	public void eliminarArchivo() {
+		
+		String RESET = "\u001B[0m";
+        String ROJO = "\u001B[91m";
+        String VERDE = "\u001B[32m";
+        
+        if (manejadorArchivo.existeArchivo()) {
+            if (manejadorArchivo.eliminarArchivo()) {
+                System.out.println(VERDE + "Se ha eliminado el archivo con éxito" + RESET);
+                manejadorArchivo.crearArchivo();
+            } else {
+                System.out.println(ROJO + "Error al eliminar el archivo de texto" + RESET);
+            }
+        } else {
+            System.out.println(ROJO + "Error, el archivo que intentas eliminar no existe" + RESET);
+        }
+		
+	}
+	
+	
+	
+	
+	public boolean verificarLlenadoDePalabras(String palabrasGuardadas[]) {
+        String cad = "";
+        
+        for (int i = 0; i < palabrasGuardadas.length; i++) {
+            cad = cad + palabrasGuardadas[i].replace(",", "");
+        }
+        
+        int caracteresValidos = 0;
+        
+        for (int j = 0; j < cad.length(); j++) {
+            if (Character.isLetter(cad.charAt(j)) == true) {
+                caracteresValidos++;
+            }
+        }
+        
+        return caracteresValidos == cad.length();
+    }
+
+	
+	public boolean validarPalabrasParaJugar() {
+        String palabrasCargadas[] = null;
+        
+        try {
+        	
+            palabrasCargadas = cargarPalabras();
+            
+        } catch (NullPointerException e) {
+        	
+            System.out.println("Ha ocurrido un error " + Arrays.toString(palabrasCargadas));
+            llenarArchivo();
+            
+        }
+        
+        palabrasCargadas = cargarPalabras();
+        
+        do {
+        	
+            if (palabrasCargadas == null) {
+                llenarArchivo();
+                palabrasCargadas = cargarPalabras();
+            } else {
+                break;
+            }
+            
+        } while (palabrasCargadas != null);
+        
+        if (verificarLlenadoDePalabras(palabrasCargadas) == false) {
+        	
+            System.out.println("---------------------------------------------------------------------------------------------------------------");
+            System.out.println("ERROR!! Ingresaste caracteres que no son letras en el archivo");
+            System.out.println("Inténtalo de NUEVO...");
+            System.out.println("---------------------------------------------------------------------------------------------------------------");
+            return false;
+            
+        }
+        return true;
+        
+    }
+
+	
+	
+	public void menuOpciones() {
+        Scanner scanner = new Scanner(System.in);
+        
+        
+        String AZUL = "\u001B[36m";
+        String RESET = "\u001B[0m";
+        char eleccion = ' ';
+        
+        do {
+        	
+            System.out.println("╔════════════════════════════════════════════════════════╗");
+            System.out.println("║ " + AZUL + "                   MENU PRINCIPAL                   " + RESET + "   ║");
+            System.out.println("╠════════════════════════════════════════════════════════╣");
+            System.out.println("║ Elige una opción:                                      ║");
+            System.out.println("║                                                        ║");
+            System.out.println("║   1) Verificar archivo                                 ║");
+            System.out.println("║   2) Llenar archivo con palabras                       ║");
+            System.out.println("║   3) Borrar archivo                                    ║");
+            System.out.println("║   4) Jugar                                             ║");
+            System.out.println("║   5) Salir                                             ║");
+            System.out.println("╚════════════════════════════════════════════════════════╝");
+            System.out.print("Tu opción: ");
+            
+            String opc = scanner.next();
+            
+            if (opc.length() == 1) {
+            	
+                eleccion = opc.charAt(0);
+                
+                switch (eleccion) {
+                
+                    case '1':
+                    	
+                        verificarArchivo();
+                        break;
+                    
+                    case '2':
+                    	
+                        llenarArchivo();
+                        break;
+                    
+                    case '3':
+                    	
+                        eliminarArchivo();
+                        break;
+                    
+                    case '4':
+                        String palabrasCargadas[] = null;
+                        
+                        if (validarPalabrasParaJugar() == false) {
+                        	
+                            break;
+                        } else {
+                        	
+                            palabrasCargadas = cargarPalabras();
+                        }
+                        
+                        String palabraSecreta = "";
+                        
+                        try {
+                        	
+                            palabraSecreta = elegirPalabra(palabrasCargadas);
+                            
+                        } catch (ArrayIndexOutOfBoundsException e) {
+                            System.out.println("-----------------------------------------------------------------------------------------------");
+                            System.out.println("Ha ocurrido un error parece que no llenaste correctamente el archivo de texto");
+                            System.out.println("Inténtalo de nuevo correctamente!!");
+                            System.out.println("---------------------------------------------------------------------------------------------");
+                            llenarArchivo();
+                            break;
+                        }
+                        inicioAhorcado(palabraSecreta);
+                        break;
+                    
+                    case '5':
+                        System.out.println("Fin del Juego DEJAVU!!!");
+                        System.out.println(AZUL + "Saliendo..." + RESET);
+                        break;
+                    
+                    default:
+                        System.out.println("ERROR!!! Ingresa una opción válida del 1 al 5 :)");
+                }
+                System.out.println("----------------------------------------------------------------------------------");
+            }
+        } while (eleccion != '5');
+        
+    }
+	
+	
+	public String[] cargarPalabras() {
+		
+        return manejadorArchivo.cargarPalabras();
+        
+    }
+
+	
+	
+	
+	public String elegirPalabra(String arreglo[]) {
+        Scanner scanner = new Scanner(System.in);
+        String AZUL = "\u001B[36m";
+        String RESET = "\u001B[0m";
+        
+        
+        String palabrasEsp[] = arreglo[0].split(",");
+        String palabrasIng[] = arreglo[1].split(",");
+        
+        int posicionPalabraSeleccionada;
+        String palabraSecreta = "";
+        String op = "";
+        
+        System.out.println("--------------------------------------------------------------");
+        System.out.println("Bienvenido al juego del Ahorcado");
+        System.out.println(AZUL+"╔══════════════════════════════════════════╗"+RESET);
+        System.out.println(AZUL+"║             JUEGO DEL AHORCADO           ║"+RESET);
+        System.out.println(AZUL+"╚══════════════════════════════════════════╝"+RESET);
+        
+        do {
+        	
+            System.out.println("Elige en qué idioma quieres jugar");
+            System.out.println("➤ 1) Jugar con palabras en ESPAÑOL");
+            System.out.println("➤ 2) Jugar con palabras en INGLÉS");
+            System.out.println("--------------------------------------------------------------");
+            
+            op = scanner.next().toUpperCase();
+            
+            switch (op) {
+                case "1":
+                    posicionPalabraSeleccionada = new Random().nextInt(palabrasEsp.length);
+                    palabraSecreta = palabrasEsp[posicionPalabraSeleccionada];
+                    break;
+                
+                case "2":
+                    posicionPalabraSeleccionada = new Random().nextInt(palabrasIng.length);
+                    palabraSecreta = palabrasIng[posicionPalabraSeleccionada];
+                    break;
+                
+                default:
+                    System.out.println("La opción que elegiste no es correcta");
+                    System.out.println("Solo puedes ingresar '1' o '2'");
+            }
+        } while (!(op.equals("1") || op.equals("2")));
+        
+        palabraSecreta = palabraSecreta + "-" + op;
+        return palabraSecreta;
+        
+    }
+
+	//buequeda lineal
+	/*public int buscarLetra(char[] letrasDisponibles, char letraBuscada) {
+		
+        for (int i = 0; i < letrasDisponibles.length; i++) {
+            if (letrasDisponibles[i] == letraBuscada) {
+                return i; 
+            }
+        }
+        return -1; 
+        
+    }*/
+	
+	//busqueda binaria
+	/*public int buscarLetra(char[] letrasDisponibles, char letraBuscada) {
+
+	    int inicio = 0;
+	    int fin = letrasDisponibles.length - 1;
+
+	    while (inicio <= fin) {
+
+	        int medio = (inicio + fin) / 2;
+
+	        if (letrasDisponibles[medio] == letraBuscada) {
+	            return medio;  
+	        }
+
+	        if (letrasDisponibles[medio] > letraBuscada) {
+	            fin = medio - 1;
+	        } 
+	        else {
+	            inicio = medio + 1;
+	        }
+	    }
+
+	    return -1; 
+	}*/
+
+	
+	public int buscarLetraInterpolada(char[] letrasDisponibles, char letraBuscada) {
+
+	    int inicio = 0;
+	    int fin = letrasDisponibles.length - 1;
+
+	    while (inicio <= fin &&
+	           letraBuscada >= letrasDisponibles[inicio] &&
+	           letraBuscada <= letrasDisponibles[fin]) {
+
+	        int pos = inicio + 
+	                 ((letraBuscada - letrasDisponibles[inicio]) * (fin - inicio)) /
+	                 (letrasDisponibles[fin] - letrasDisponibles[inicio]);
+
+	        if (letrasDisponibles[pos] == letraBuscada) {
+	            return pos;
+	        }
+
+	        if (letrasDisponibles[pos] < letraBuscada) {
+	            inicio = pos + 1;
+	        } else {
+	            fin = pos - 1;
+	        }
+	    }
+
+	    return -1;
+	}
+	
+	
+	public int buscarLetra(char[] letrasDisponibles, char letraBuscada) {
+	    return buscarLetraInterpolada(letrasDisponibles, letraBuscada);
+	}
+
+
+	
+	 public void inicioAhorcado(String palabraSecretaMasIdioma) {
+	        Scanner scanner = new Scanner(System.in);
+	        
+	        String ROJO = "\u001B[91m";
+	        String RESET = "\u001B[0m";
+	        String AMARILLO = "\u001B[33m";
+	        String VERDE = "\u001B[32m";
+	        
+	        boolean ganador = false;
+	        setIntentos((byte) 8);
+	        
+	        pilaLetrasIngresadas = new Pila(30);
+	        
+	        String palabraIdioma[] = palabraSecretaMasIdioma.split("-");
+	        String palabraSecreta = palabraIdioma[0];
+	        String idioma = palabraIdioma[1];
+	        
+	        if (palabraSecreta.length() == 0) {
+	            System.out.println("Error no hiciste correctamente el ingreso de palabras :(");
+	            return;
+	        }
+	        
+	        if (idioma.equalsIgnoreCase("2")) {
+	            System.out.println(AMARILLO +"Estoy pensando en una palabra en INGLÉS con " + palabraSecreta.length() + " letras"+RESET);
+	        } else {
+	            System.out.println(AMARILLO +"Estoy pensando en una palabra en ESPAÑOL con " + palabraSecreta.length() + " letras"+RESET);
+	        }
+	        
+	        System.out.println("--------------------------------------------------------------");
+	        
+	        do {
+	            if (getIntentos() == 0) {
+	                break;
+	            }
+	            
+	            
+	            System.out.println("Tienes " + getIntentos() + " oportunidades para adivinar");
+	            mostrarMonito(getIntentos());
+	            System.out.println();
+	            System.out.println("Letras disponibles: " + obtenerLetrasDisponibles(idioma));
+	            System.out.println("Letras ingresadas");
+	            System.out.println(Arrays.toString(pilaLetrasIngresadas.obtenerElementos())  );
+	           
+	            System.out.println();
+	            System.out.print("Ingresa una letra: ");
+	            
+	            String letra = scanner.next().toUpperCase();
+	            
+	            if (letra.length() > 1) {
+	                System.out.println("Ingresaste más de un carácter");
+	                continue;
+	            }
+	            
+	            
+	            if (letra.length() == 1) {
+	                char charLetra = letra.charAt(0);
+	                
+	                if (charLetra >= 48 && charLetra <= 57) {
+	                    System.out.println(ROJO +"Esto no es una letra, es un número"+RESET);
+	                    continue;
+	                }
+	                
+	                if (!Character.isLetter(charLetra)) {
+	                    System.out.println(ROJO +"Ingresaste un carácter especial"+RESET);
+	                    continue;
+	                }
+	                
+	                if (idioma.equals("2") && letra.equals("Ñ")) {
+	                    System.out.println("La letra 'ñ' no existe en el abecedario del idioma inglés");
+	                    descontarIntentos();
+	                    letrañ();
+	                    continue;
+	                }
+	                
+	                if (pilaLetrasIngresadas.contiene(letra)) {
+	                    System.out.println("Ya habías ingresado esa letra");
+	                    continue;
+	                }
+	                
+	                pilaLetrasIngresadas.push(letra);
+	                
+	                boolean letraEncontrada = false;
+	                for (int i = 0; i < palabraSecreta.length(); i++) {
+	                    if (palabraSecreta.substring(i, i + 1).equals(letra)) {
+	                        letraEncontrada = true;
+	                        break;
+	                    }
+	                }
+	                
+	                if (letraEncontrada) {
+	                    System.out.println(VERDE + "✅ Acertaste!!" + RESET);
+	                } else {
+	                    System.out.println(ROJO + "❌ La letra NO está en la palabra SECRETA" + RESET);
+	                    descontarIntentos();
+	                }
+	                
+	                
+	                String palabraActual = obtenerPalabraAdivinada(palabraSecreta);
+	                for (int i = 0; i < palabraActual.length(); i++) {
+	                    if (palabraActual.codePointAt(i) <= 90 && palabraActual.codePointAt(i) >= 65) {
+	                        System.out.print(palabraActual.charAt(i) + " ");
+	                    } else {
+	                        System.out.print("_ ");
+	                    }
+	                }
+	                System.out.println();
+	            }
+	            
+	            
+	            if (seAdivinoLaPalabra(palabraSecreta)) {
+	                ganador = true;
+	                break;
+	            }
+	            
+	        } while (getIntentos() > 0);
+	        
+	        if (getIntentos() == 0) {
+	            mostrarMonito((byte) 0);
+	            System.out.println("Te has quedado sin oportunidades disponibles :(");
+	            System.out.println("La palabra secreta era: " + AMARILLO + palabraSecreta + RESET);
+	        } else if (ganador == true) {
+	            System.out.println(VERDE + "¡Felicidades! GANASTE :D!!!" + RESET);
+	        	//JOptionPane.showMessageDialog(null, "¡Felicidades, ganaste!");
+
+	        }
+	    }
+	
+	
+	
+	 public boolean seAdivinoLaPalabra(String palabraSecreta) {
+		 
+		 
+	        String[] letrasIngresadas = pilaLetrasIngresadas.obtenerElementos();
+	        int cont = 0;
+	        
+	        for (int i = 0; i < palabraSecreta.length(); i++) {
+	            String posicion = palabraSecreta.substring(i, i + 1);
+	            for (int j = 0; j < letrasIngresadas.length; j++) {
+	                if (posicion.equals(letrasIngresadas[j])) {
+	                    cont++;
+	                    break;
+	                }
+	            }
+	        }
+	        
+	        return cont == palabraSecreta.length();
+	    }
+
+	 
+	 public String obtenerPalabraAdivinada(String palabraSecreta) {
+		 
+	        String[] letrasIngresadas = pilaLetrasIngresadas.obtenerElementos();
+	        String carac = "!#$%&/()=? '<>-_.:,;}";
+	        String palabraCodificada = "";
+	        
+	        for (int i = 0; i < palabraSecreta.length(); i++) {
+	            palabraCodificada = palabraCodificada + carac.substring(i, i + 1);
+	        }
+	        
+	        for (int i = 0; i < letrasIngresadas.length; i++) {
+	            for (int j = 0; j < palabraSecreta.length(); j++) {
+	                if (palabraSecreta.substring(j, j + 1).equals(letrasIngresadas[i])) {
+	                    char c = palabraCodificada.charAt(j);
+	                    palabraCodificada = palabraCodificada.replace(c, letrasIngresadas[i].charAt(0));
+	                }
+	            }
+	        }
+	        
+	        return palabraCodificada;
+	    }
+
+	
+	
+	 public String obtenerLetrasDisponibles(String idioma) {
+		 
+	        char[] letrasDisponibles;
+	        String[] letrasIngresadas = pilaLetrasIngresadas.obtenerElementos();
+	        
+	        
+	        if (idioma.equals("1")) {
+	            letrasDisponibles = new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'Ñ', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+	        } else {
+	            letrasDisponibles = new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
+	        }
+	        
+	        
+	        
+	        for (int j = 0; j < letrasIngresadas.length; j++) {
+	            String letraIngresada = letrasIngresadas[j];
+	            if (letraIngresada != null && !letraIngresada.equals(" ")) {
+	                char letra = letraIngresada.toUpperCase().charAt(0);
+	                
+	                int posicion = buscarLetra(letrasDisponibles, letra);
+	                if (posicion != -1) {
+	                    letrasDisponibles[posicion] = '_';
+	                }
+	            }
+	        }
+	        
+	        
+	        
+	        String letrasMayusculas = "";
+	        String letrasMinusculas = "";
+	        
+	        for (int i = 0; i < letrasDisponibles.length; i++) {
+	            if (letrasDisponibles[i] != '_') {
+	                letrasMayusculas += letrasDisponibles[i] + " ";
+	                if (letrasDisponibles[i] == 'Ñ') {
+	                    letrasMinusculas += "ñ ";
+	                } else {
+	                    letrasMinusculas += Character.toLowerCase(letrasDisponibles[i]) + " ";
+	                }
+	            } else {
+	                letrasMayusculas += "_ ";
+	            }
+	        }
+	        
+	        if (letrasMayusculas.length() > 0) {
+	            letrasMayusculas = letrasMayusculas.substring(0, letrasMayusculas.length() - 1);
+	        }
+	        if (letrasMinusculas.length() > 0) {
+	            letrasMinusculas = letrasMinusculas.substring(0, letrasMinusculas.length() - 1);
+	        }
+	        
+	        return letrasMayusculas + "\n" + letrasMinusculas;
+	        
+	    }
+
+	
+	 
+	 
+	
+	public void mostrarMonito(byte intentosRestantes) {
+        System.out.println("-----------");
+        
+        
+        switch (intentosRestantes) {
+            case 8:
+                System.out.println("   ");
+                System.out.println("   ");
+                System.out.println("   ");
+                System.out.println("   ");
+                System.out.println("   ");
+                System.out.println("   ");
+                break;
+            case 7:
+                System.out.println("   _______");
+                System.out.println("  |/");
+                System.out.println("  |");
+                System.out.println("  |");
+                System.out.println("  |");
+                System.out.println(" _|___");
+                break;
+            case 6:
+                System.out.println("   _______");
+                System.out.println("  |/      |");
+                System.out.println("  |");
+                System.out.println("  |");
+                System.out.println("  |");
+                System.out.println(" _|___");
+                break;
+            case 5:
+                System.out.println("   _______");
+                System.out.println("  |/      |");
+                System.out.println("  |      ( )");
+                System.out.println("  |");
+                System.out.println("  |");
+                System.out.println(" _|___");
+                break;
+            case 4:
+                System.out.println("   _______");
+                System.out.println("  |/      |");
+                System.out.println("  |      ( )");
+                System.out.println("  |       |");
+                System.out.println("  |");
+                System.out.println(" _|___");
+                break;
+            case 3:
+                System.out.println("   _______");
+                System.out.println("  |/      |");
+                System.out.println("  |      ( )");
+                System.out.println("  |      \\|");
+                System.out.println("  |");
+                System.out.println(" _|___");
+                break;
+            case 2:
+                System.out.println("   _______");
+                System.out.println("  |/      |");
+                System.out.println("  |      ( )");
+                System.out.println("  |      \\|/");
+                System.out.println("  |");
+                System.out.println(" _|___");
+                break;
+            case 1:
+                System.out.println("   _______");
+                System.out.println("  |/      |");
+                System.out.println("  |      ( )");
+                System.out.println("  |      \\|/");
+                System.out.println("  |       |");
+                System.out.println(" _|___");
+                break;
+            case 0:
+                System.out.println("   _______");
+                System.out.println("  |/      |");
+                System.out.println("  |      ( )");
+                System.out.println("  |      \\|/");
+                System.out.println("  |      / \\");
+                System.out.println(" _|___");
+                break;
+                
+        }
+        
+        System.out.println("-----------");
+    }
+	
+	
+}
+
